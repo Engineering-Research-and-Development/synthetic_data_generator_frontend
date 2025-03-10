@@ -17,6 +17,7 @@
     let selectedVersion: number = 0;
     let featuresCreated: FeaturesCreated[] = [];
     let errorMessage: string;
+
     function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[] {
         let outFunctions: OutFunction[] = [];
 

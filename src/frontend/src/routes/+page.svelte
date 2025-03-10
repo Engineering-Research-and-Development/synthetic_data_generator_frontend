@@ -3,6 +3,7 @@
     import UploadModal from "./components/UploadModal.svelte";
 
     const createEndpoint = '/create';
+    const checkResults ='/checkResults';
     let showPopup: boolean = false;
     let uploadedFile: File | null = null;
 </script>
@@ -22,6 +23,11 @@
                     href={createEndpoint}
                     class="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition">
                 Create a dataset from scratch
+            </Button>
+            <Button
+                href={checkResults}
+                class="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition">
+                Check the results
             </Button>
         </div>
     </div>
