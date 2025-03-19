@@ -79,7 +79,7 @@
                             <TableBodyCell>{column.column_datatype}</TableBodyCell>
                             <TableBodyCell>
                                 <ul>
-                                    {#each column.column_data as data}
+                                    {#each column.column_data.slice(0,10) as data}
                                         <li>{data}</li>
                                     {/each}
                                 </ul>
