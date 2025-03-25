@@ -75,7 +75,7 @@
 
         console.log(JSON.stringify(postData));
         try {
-            const response = await fetch(`${BACKEND_URL}/sdg_input`, {
+            const response = await fetch(`${BACKEND_URL}/sdg_input/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
