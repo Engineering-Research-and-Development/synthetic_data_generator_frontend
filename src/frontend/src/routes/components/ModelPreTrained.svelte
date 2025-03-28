@@ -4,26 +4,26 @@
     import {BACKEND_URL} from "../../stores/shared";
     import Error from "./Error.svelte";
 
-    export let trainedModels:PreTrainedModel[];
+    export let trainedModels:TrainedModel[];
     export let selectedModel: SelectedModel;
-    export let selectedVersion: number;
+    export let selectedVersion: string;
 
     let chosenModel: string;
-    let fetchedPreTrainedModels: PreTrainedModel[] = [];
+    let fetchedPreTrainedModels: TrainedModel[] = [];
 
     let models: typeof fetchedPreTrainedModels[number] | null = null;
-    let selectedVersionLabel: { value: number; name: string }[] = [];
+    let selectedVersionLabel: { value: string; name: string }[] = [];
     let newModels: { value: string; name: string }[] = [];
 
-    let trainingInfo: TrainingInfo | null = null;
-    let featureSchema: FeatureSchema[] = [];
+    let versionInfo: Version | null = null;
+    let featureType: FeatureType[] = [];
     let errorMessage:string;
 
     onMount(async () => {
         try {
             newModels = trainedModels.map((model) => ({
-                value: model.name,
-                name: model.name
+                value: model.model.name,
+                name: model.model.name
             }));
         } catch (error) {
             errorMessage='Error fetching trained models:' + error;
@@ -31,26 +31,31 @@
     });
 
     $: {
-        models = trainedModels.find((model) => model.name === chosenModel) || null;
-        selectedVersionLabel = models ? models.version_ids.map((id) => ({value: id, name: `Version ${id}`})) : [];
+        models = trainedModels.find((model) => model.model.name === chosenModel) || null;
+        fetchAlgorithmName();
+        selectedVersionLabel = models ? models.versions.map((version) => ({ value: version.version_name, name: version.version_name.toString() })) : [];
         if (selectedVersion && models) {
-            fetchTrainingInfoAndFeatureSchema();
-            selectedModel ={id: models.id, name:models.name}
+            versionInfo = models.versions.find((version) => version.version_name === selectedVersion) || null;
+            featureType = models.datatypes;
+            selectedModel ={id: models.model.id, name:models.model.name}
         }
     }
 
-    async function fetchTrainingInfoAndFeatureSchema() {
+    async function fetchAlgorithmName() {
         try {
-            // Use the selected model's ID in the fetch URL
-            const response = await fetch(BACKEND_URL +`/trained_models/${models?.id}?include_versions=true&${selectedVersion}`);
-            const data = await response.json();
-
-            if (data.training_info) {
-                trainingInfo = data.training_info as TrainingInfo;
+            if (models == null) {
+                return
             }
 
-            if (data.feature_schema) {
-                featureSchema = data.feature_schema as FeatureSchema[];
+            if (models.model.algorithm_name !== undefined) {
+                return;
+            }
+            const response = await fetch(BACKEND_URL +`/algorithms/${models.model.algorithm}`);
+            const data = await response.json();
+
+            if (data.algorithm) {
+                models.model.algorithm_name = data.algorithm.name
+
             }
         } catch (error) {
             errorMessage='Error fetching training info and feature schema:'+ error;
@@ -91,67 +96,50 @@
                 <TableBody>
                     <TableBodyRow>
                         <TableBodyCell>Name</TableBodyCell>
-                        <TableBodyCell>{models.name}</TableBodyCell>
+                        <TableBodyCell>{models.model.name}</TableBodyCell>
                     </TableBodyRow>
                     <TableBodyRow>
                         <TableBodyCell>Dataset Name</TableBodyCell>
-                        <TableBodyCell>{models.dataset_name}</TableBodyCell>
+                        <TableBodyCell>{models.model.dataset_name}</TableBodyCell>
                     </TableBodyRow>
                     <TableBodyRow>
                         <TableBodyCell>Input Shape</TableBodyCell>
-                        <TableBodyCell>{models.input_shape}</TableBodyCell>
+                        <TableBodyCell>{models.model.input_shape}</TableBodyCell>
                     </TableBodyRow>
                     <TableBodyRow>
                         <TableBodyCell>Algorithm</TableBodyCell>
-                        <TableBodyCell>{models.algorithm_id}</TableBodyCell>
+                        <TableBodyCell>{models.model.algorithm_name}</TableBodyCell>
                     </TableBodyRow>
                     <TableBodyRow>
                         <TableBodyCell>Size</TableBodyCell>
-                        <TableBodyCell>{models.size}</TableBodyCell>
+                        <TableBodyCell>{models.model.size}</TableBodyCell>
                     </TableBodyRow>
 
-                    <!-- Display Training Info -->
-                    {#if trainingInfo}
+                    <!-- Display Version Info -->
+                    {#if versionInfo}
                         <TableBodyRow>
                             <TableBodyCell>Loss Function</TableBodyCell>
-                            <TableBodyCell>{trainingInfo.loss_function}</TableBodyCell>
+                            <TableBodyCell>{versionInfo.loss_function}</TableBodyCell>
                         </TableBodyRow>
                         <TableBodyRow>
-                            <TableBodyCell>Train Loss</TableBodyCell>
-                            <TableBodyCell>{trainingInfo.train_loss}</TableBodyCell>
+                            <TableBodyCell>Loss Values</TableBodyCell>
+                            <TableBodyCell>Train: {versionInfo.train_loss} | Val: {versionInfo.val_loss}</TableBodyCell>
                         </TableBodyRow>
                         <TableBodyRow>
-                            <TableBodyCell>Validation Loss</TableBodyCell>
-                            <TableBodyCell>{trainingInfo.val_loss}</TableBodyCell>
-                        </TableBodyRow>
-                        <TableBodyRow>
-                            <TableBodyCell>Train Samples</TableBodyCell>
-                            <TableBodyCell>{trainingInfo.train_samples}</TableBodyCell>
-                        </TableBodyRow>
-                        <TableBodyRow>
-                            <TableBodyCell>Validation Samples</TableBodyCell>
-                            <TableBodyCell>{trainingInfo.val_samples}</TableBodyCell>
+                            <TableBodyCell>Dataset Sizes</TableBodyCell>
+                            <TableBodyCell>Train: {versionInfo.train_samples} | Val: {versionInfo.val_samples}</TableBodyCell>
                         </TableBodyRow>
                     {/if}
 
-                    <!-- Display Feature Schema -->
-                    {#if featureSchema.length > 0}
-                        {#each featureSchema as feature}
+                    {#if featureType.length > 0}
+                        {#each featureType as feature}
                             <TableBodyRow>
-                                <TableBodyCell>Feature Name</TableBodyCell>
-                                <TableBodyCell>{feature.feature_name}</TableBodyCell>
-                            </TableBodyRow>
-                            <TableBodyRow>
-                                <TableBodyCell>Feature Position</TableBodyCell>
-                                <TableBodyCell>{feature.feature_position}</TableBodyCell>
-                            </TableBodyRow>
-                            <TableBodyRow>
-                                <TableBodyCell>Is Categorical</TableBodyCell>
-                                <TableBodyCell>{feature.is_categorical ? 'Yes' : 'No'}</TableBodyCell>
-                            </TableBodyRow>
-                            <TableBodyRow>
-                                <TableBodyCell>Data Type</TableBodyCell>
-                                <TableBodyCell>{feature.datatype}</TableBodyCell>
+                                <TableBodyCell>Feature Info</TableBodyCell>
+                                <TableBodyCell>
+                                    {feature.feature_name} (Pos: {feature.feature_position}) |
+                                    {feature.is_categorical ? 'Categorical' : 'Numerical'} |
+                                    Type: {feature.type}
+                                </TableBodyCell>
                             </TableBodyRow>
                         {/each}
                     {/if}

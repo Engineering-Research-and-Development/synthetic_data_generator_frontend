@@ -12,36 +12,80 @@
 
     let useNewModel = true;
     let selectedModel: SelectedModel;
-    let selectedVersion: number;
-    let trained_models: PreTrainedModel[];
+    let selectedVersion: string;
+    let trained_models: TrainedModel[];
     let algorithms: NewAlgorithm[];
-    let isLoading = true; // Add a loading state
+    let isLoading = true;
     let errorMessage: string;
-    
+
+    let algorithm_ids: number[] = [];
+    let trained_model_ids: number[] = [];
+
     onMount(async () => {
         try {
-            const response = await fetch(BACKEND_URL + '/algorithms/?include_allowed_datatypes=true')
-            if (response.ok) {
-                algorithms = await response.json()
-            } else {
-                errorMessage='Failed to fetch data:'+ response.statusText;
+            const idsResponse = await fetch(BACKEND_URL + '/algorithms/');
+            if (!idsResponse.ok) {
+                errorMessage=`Failed to fetch algorithms list: ${idsResponse.statusText}`;
             }
-        } catch (error) {
-            errorMessage='Error fetching data:'+ error;
 
-        }
-        try {
-            const response = await fetch(BACKEND_URL + '/trained_models/?include_version_ids=true');
-            if (response.ok) {
-                trained_models = await response.json();
-            } else {
-                errorMessage='Failed to fetch data:'+ response.statusText;
-            }
+            const idsData = await idsResponse.json();
+            algorithm_ids = idsData.algorithms.map((a: { id: number }) => a.id);
+
+            algorithms = await Promise.all(
+                algorithm_ids.map(async (id) => {
+                    const response = await fetch(`${BACKEND_URL}/algorithms/${id}`);
+                    if (!response.ok) {
+                        errorMessage=`Failed to fetch algorithm ${id}: ${response.statusText}`;
+                    }
+
+                    const data = await response.json();
+                    return {
+                        ...data.algorithm,
+                        datatypes: data.datatypes.map((dt: any) => ({
+                            type: dt.type,
+                            is_categorical: dt.is_categorical
+                        }))
+                    } as NewAlgorithm;
+                })
+            );
         } catch (error) {
-            errorMessage='Error fetching data:'+ error;
-        } finally {
-            isLoading = false; // Set loading to false after fetching data
+            errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            console.error('Error:', error);
         }
+
+
+        try {
+            const idsResponse = await fetch(BACKEND_URL + '/trained_models/');
+            if (!idsResponse.ok) {
+                errorMessage=`Failed to fetch algorithms list: ${idsResponse.statusText}`;
+            }
+
+            const idsData = await idsResponse.json();
+            trained_model_ids = idsData.models.flatMap(
+                (m: { versions: Array<{ trained_model?: number }> }) =>
+                    m.versions?.map((v) => v.trained_model).filter(Boolean) ?? []
+            );
+
+            trained_models = await Promise.all(
+                trained_model_ids.map(async (id) => {
+                    const response = await fetch(`${BACKEND_URL}/trained_models/${id}`);
+                    if (!response.ok) {
+                        errorMessage=`Failed to fetch algorithm ${id}: ${response.statusText}`;
+                    }
+
+                    const data = await response.json();
+                    return {
+                        model: data.model,
+                        datatypes: data.datatypes,
+                        versions: data.versions
+                    } as TrainedModel;
+                })
+            );
+        } catch (error) {
+            errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            console.error('Error:', error);
+        }
+        isLoading = false;
     });
 
     function submitModels() {

@@ -29,7 +29,12 @@ type FeaturesCreated = {
     category: string
 };
 
-type AllowedData  = {
+type SelectedModel = {
+    id: number;
+    name: string;
+}
+
+type Datatype = {
     datatype: string
     is_categorical: boolean
 }
@@ -39,38 +44,43 @@ type NewAlgorithm = {
     name: string;
     description: string;
     default_loss_function: string;
-    allowed_data: AllowedData[]
+    datatypes: Datatype[]
 };
 
-type TrainingInfo = {
+type Version = {
+    version_name: string;
     loss_function: string;
     train_loss: number;
     val_loss: number;
     train_samples: number;
     val_samples: number;
 }
-type FeatureSchema = {
+
+type FeatureType = {
     feature_name: string;
     feature_position: number;
     is_categorical: boolean;
-    datatype: string;
+    type: string;
 }
 
-type PreTrainedModel = {
+type Model = {
     id: number;
     name: string;
     dataset_name: string;
     input_shape: string;
-    algorithm_id: string;
+    algorithm: number;
+    algorithm_name: string;
     size: string;
-    version_ids: number[];
-};
-
-type SelectedModel = {
-    id: number;
-    name: string;
 }
 
+type TrainedModel = {
+    model: Model;
+    versions: Version[];
+    datatypes: FeatureType[];
+};
+
+
+////////////////////////////////
 type OutParameter = {
     param_id: number;
     value: number;

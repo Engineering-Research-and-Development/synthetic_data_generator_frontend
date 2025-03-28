@@ -55,7 +55,7 @@
                     <TableBodyRow>
                         <TableBodyCell>Allowed Data</TableBodyCell>
                         <TableBodyCell>
-                            {#each chosenAlgo.allowed_data as data}
+                            {#each chosenAlgo.datatypes as data}
                                 <div>{data.datatype} ({data.is_categorical ? 'categorical' : 'non-categorical'})</div>
                             {/each}
                         </TableBodyCell>
