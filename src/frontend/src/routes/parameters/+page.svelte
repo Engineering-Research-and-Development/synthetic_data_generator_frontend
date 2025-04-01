@@ -23,7 +23,9 @@
 
     onMount(async () => {
         selectedFunctions = JSON.parse(sessionStorage.getItem("featureFunction") || "{}");
-
+        if (Object.values(selectedFunctions).every(ids => ids.length === 0)) {
+            await goto("/model");
+        }
         try {
             // Collect all unique IDs from selectedFunctions
             const allFunctionIds = new Set<string>();

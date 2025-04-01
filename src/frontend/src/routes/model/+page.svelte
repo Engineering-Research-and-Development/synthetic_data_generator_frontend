@@ -18,9 +18,6 @@
     let isLoading = true;
     let errorMessage: string;
 
-    let algorithm_ids: number[] = [];
-    let trained_model_ids: number[] = [];
-
     onMount(async () => {
         try {
             const idsResponse = await fetch(BACKEND_URL + '/algorithms/');
@@ -29,6 +26,7 @@
             }
 
             const idsData = await idsResponse.json();
+            let algorithm_ids: number[] = [];
             algorithm_ids = idsData.algorithms.map((a: { id: number }) => a.id);
 
             algorithms = await Promise.all(
@@ -50,8 +48,12 @@
             );
         } catch (error) {
             errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-            console.error('Error:', error);
         }
+
+        algorithms.forEach(algorithm => {
+            const lastDotIndex = algorithm.name.lastIndexOf('.');
+            algorithm.name = lastDotIndex !== -1 ? algorithm.name.slice(lastDotIndex + 1) : algorithm.name;
+        });
 
 
         try {
@@ -61,10 +63,12 @@
             }
 
             const idsData = await idsResponse.json();
-            trained_model_ids = idsData.models.flatMap(
-                (m: { versions: Array<{ trained_model?: number }> }) =>
-                    m.versions?.map((v) => v.trained_model).filter(Boolean) ?? []
-            );
+
+            let models = idsData.models;
+            let trained_model_ids: number[] = [];
+            models.forEach((model: {model: Model, version: Version}) => {
+                trained_model_ids.push(model.model.id);
+            });
 
             trained_models = await Promise.all(
                 trained_model_ids.map(async (id) => {
@@ -83,7 +87,6 @@
             );
         } catch (error) {
             errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-            console.error('Error:', error);
         }
         isLoading = false;
     });
