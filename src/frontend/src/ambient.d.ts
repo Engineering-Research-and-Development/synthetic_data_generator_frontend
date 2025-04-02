@@ -102,7 +102,7 @@ type AIModel = {
 
 type SdgOut = {
     additional_rows: number;
-    functions: OutFunction[];
+    functions?: OutFunction[];
     ai_model: AIModel;
     user_file?: object[];
     features_created?: FeaturesCreated[];

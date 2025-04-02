@@ -16,7 +16,7 @@
         }
 
         try {
-            const response = await fetch(`http://localhost:5984/test/${documentId}`, {
+            const response = await fetch(`http://localhost:5984/model_results/${documentId}`, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -72,14 +72,14 @@
                     <TableHeadCell>Column Data</TableHeadCell>
                 </TableHead>
                 <TableBody>
-                    {#each documentData.result_data as column}
+                    {#each documentData.results as column}
                         <TableBodyRow>
                             <TableBodyCell>{column.column_name}</TableBodyCell>
                             <TableBodyCell>{column.column_type}</TableBodyCell>
                             <TableBodyCell>{column.column_datatype}</TableBodyCell>
                             <TableBodyCell>
                                 <ul>
-                                    {#each column.column_data.slice(0,10) as data}
+                                    {#each column.column_data.slice(0,4) as data}
                                         <li>{data}</li>
                                     {/each}
                                 </ul>

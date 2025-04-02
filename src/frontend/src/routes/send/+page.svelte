@@ -16,6 +16,8 @@
     let selectedModel: SelectedModel;
     let featuresCreated: FeaturesCreated[] = [];
     let errorMessage: string;
+    let sending: boolean = true
+    let doc_id: string
 
     function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[] {
         let outFunctions: OutFunction[] = [];
@@ -84,7 +86,9 @@
                 errorMessage="An error occurred";
             }
             const result = await response.json();
+            doc_id = result.doc_id
             console.log("Data sent successfully:", result);
+            sending = false
             sessionStorage.clear();
         } catch (error) {
             errorMessage="Error sending data:"+ error;
@@ -94,4 +98,16 @@
 
 {#if errorMessage}
     <Error message={errorMessage}/>
+{/if}
+
+{#if sending}
+<div class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+    <h1 class="flex justify-center text-2xl font-bold my-4">Sending data</h1><br>
+    <p class="flex justify-center text-xl font-bold my-4">Please wait...</p>
+</div>
+{:else}
+        <div class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+            <h1 class="flex justify-center text-2xl font-bold my-4">Data sent successfully</h1><br>
+            <h2 class="flex justify-center text-2xl font-bold my-4">Please check the results in a few time using the following id: {doc_id} </h2>
+        </div>
 {/if}
