@@ -32,6 +32,7 @@ type FeaturesCreated = {
 type SelectedModel = {
     id: number;
     name: string;
+    version?: string;
 }
 
 type Datatype = {
@@ -96,7 +97,7 @@ type AIModel = {
     selected_model_id: number;
     new_model: boolean;
     new_model_name: string;
-    model_version: string;
+    model_version?: string;
 }
 
 type SdgOut = {

@@ -6,7 +6,7 @@
 
     export let trainedModels:TrainedModel[];
     export let selectedModel: SelectedModel;
-    export let selectedVersion: string;
+
 
     let chosenModel: string;
     let fetchedPreTrainedModels: TrainedModel[] = [];
@@ -18,6 +18,7 @@
     let versionInfo: Version | null = null;
     let featureType: FeatureType[] = [];
     let errorMessage:string;
+    let selectedVersion: string;
 
     onMount(async () => {
         try {
@@ -34,10 +35,11 @@
         models = trainedModels.find((model) => model.model.name === chosenModel) || null;
         fetchAlgorithmName();
         selectedVersionLabel = models ? models.versions.map((version) => ({ value: version.version_name, name: version.version_name.toString() })) : [];
+
         if (selectedVersion && models) {
             versionInfo = models.versions.find((version) => version.version_name === selectedVersion) || null;
             featureType = models.datatypes;
-            selectedModel ={id: models.model.id, name:models.model.name}
+            selectedModel ={id: models.model.id, name: models.model.name, version: selectedVersion}
         }
     }
 

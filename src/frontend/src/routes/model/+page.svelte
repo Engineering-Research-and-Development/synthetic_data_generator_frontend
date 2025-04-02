@@ -12,7 +12,6 @@
 
     let useNewModel = true;
     let selectedModel: SelectedModel;
-    let selectedVersion: string;
     let trained_models: TrainedModel[];
     let algorithms: NewAlgorithm[];
     let isLoading = true;
@@ -94,7 +93,6 @@
     function submitModels() {
         sessionStorage.setItem('newModel', JSON.stringify(useNewModel));
         sessionStorage.setItem('selectedModel', JSON.stringify(selectedModel));
-        sessionStorage.setItem('selectedVersion', JSON.stringify(selectedVersion))
         goto("/preview")
     }
 </script>
@@ -104,16 +102,16 @@
 {/if}
 
 <h1 class="text-2xl font-bold text-center my-6">Choose the AI model to use</h1>
-<div class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+<div class="flex items-center justify-center bg-gray-100 dark:bg-gray-900">
     <form on:submit|preventDefault={submitModels}
-          class="w-full max-w-4xl p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
+          class="w-full p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
     >
         <!-- Models Side-by-Side -->
-        <div class="flex flex-col md:flex-row gap-6 mb-6">
+        <div class="flex w-full md:flex-row gap-6 mb-6">
             <!-- New Model Box -->
-            <div class={`flex-1 p-4 border rounded-lg transition ${
-                    useNewModel ? "border-blue-500" : "border-gray-300 opacity-50 pointer-events-none"
-                }`}
+            <div class={`w-1/2 p-4 border rounded-lg transition ${
+          useNewModel ? "border-blue-500" : "border-gray-300 opacity-50 pointer-events-none"
+      }`}
             >
                 <h2 class="text-xl font-semibold mb-4 text-center">New Model</h2>
                 {#if !isLoading}
@@ -130,13 +128,13 @@
             </div>
 
             <!-- Pre-Trained Model Box -->
-            <div class={`flex-1 p-4 border rounded-lg transition ${
-                    useNewModel ? "border-gray-300 opacity-50 pointer-events-none" : "border-blue-500"
-                }`}
+            <div class={`w-1/2 p-4 border rounded-lg transition ${
+          useNewModel ? "border-gray-300 opacity-50 pointer-events-none" : "border-blue-500"
+      }`}
             >
                 <h2 class="text-xl font-semibold mb-4 text-center">Pre-Trained Model</h2>
                 {#if !isLoading}
-                    <ModelPreTrained trainedModels={trained_models} bind:selectedModel bind:selectedVersion/>
+                    <ModelPreTrained trainedModels={trained_models} bind:selectedModel/>
                 {:else}
                     <p>Loading...</p>
                 {/if}

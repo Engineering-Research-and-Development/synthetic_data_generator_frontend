@@ -14,7 +14,6 @@
     }>> = {};
     let newModel: boolean = false;
     let selectedModel: SelectedModel;
-    let selectedVersion: number = 0;
     let featuresCreated: FeaturesCreated[] = [];
     let errorMessage: string;
 
@@ -39,10 +38,10 @@
         return outFunctions;
     }
 
-    function generateAiModel(newModel: boolean, selectedVersion: number, newModelName: string, selectedModelId: number): AIModel{
+    function generateAiModel(newModel: boolean, newModelName: string, selectedModelId: number,  selectedVersion?: string): AIModel{
         return {
             selected_model_id: selectedModelId,
-            model_version: selectedVersion.toString(),
+            model_version: selectedVersion,
             new_model: newModel,
             new_model_name: newModelName
         }
@@ -53,7 +52,6 @@
         functionData = JSON.parse(sessionStorage.getItem("functionData") || "{}");
         newModel = JSON.parse(sessionStorage.getItem("newModel") || "false");
         selectedModel = JSON.parse(sessionStorage.getItem("selectedModel") || "");
-        selectedVersion = Number(sessionStorage.getItem("selectedVersion")) || 0;
         userFile = JSON.parse(sessionStorage.getItem("userFile") || "{}");
         featuresCreated = JSON.parse(sessionStorage.getItem("featuresCreated") || "[]");
         await sendData()
@@ -63,7 +61,7 @@
         let postData: SdgOut = {
             additional_rows: additionalRows,
             functions: generateOutFunctions(functionData),
-            ai_model: generateAiModel(newModel, selectedVersion, "test_name", selectedModel.id),
+            ai_model: generateAiModel(newModel, "test_name", selectedModel.id, selectedModel.version),
         };
 
         if (userFile.length>0) {

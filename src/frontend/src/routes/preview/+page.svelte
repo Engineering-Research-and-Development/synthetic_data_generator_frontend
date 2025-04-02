@@ -22,7 +22,6 @@
 	}>> = {};
 	let newModel: boolean = false;
 	let selectedModel: SelectedModel | null = null;
-	let selectedVersion: number = 0;
 	let featuresCreated: FeaturesCreated[] = [];
 	let headers: string[] = [];
 	let tableData: RowData[] = [];
@@ -45,7 +44,6 @@
 		functionData = JSON.parse(sessionStorage.getItem("functionData") || "{}");
 		newModel = JSON.parse(sessionStorage.getItem("newModel") || "false");
 		selectedModel = JSON.parse(sessionStorage.getItem("selectedModel") || "");
-		selectedVersion = Number(sessionStorage.getItem("selectedVersion")) || 0;
 		featuresCreated = JSON.parse(sessionStorage.getItem("featuresCreated") || "[]");
 	});
 
@@ -170,7 +168,7 @@
 		{#if selectedModel}
 			<p>{selectedModel.name}
 			{#if (!newModel)}
-				Version {selectedVersion}
+				Version {selectedModel.version}
 			{/if}
 			</p>
 		{/if}
