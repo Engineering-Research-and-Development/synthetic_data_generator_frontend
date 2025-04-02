@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Button, Input, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import Error from "../components/Error.svelte";
+    import {goto} from "$app/navigation";
 
     let documentId: string = '';
     let documentData: any = null;
@@ -56,6 +57,7 @@
     <div class="mb-4">
         <Input bind:value={documentId} placeholder="Enter Document ID" class="mb-2" />
         <Button on:click={fetchDocument}>Fetch Document</Button>
+        <Button on:click={() => goto('/')}>SDG Home</Button>
     </div>
 
     {#if error}

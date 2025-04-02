@@ -2,6 +2,8 @@
     import {BACKEND_URL} from "../../stores/shared";
     import {onMount} from "svelte";
     import Error from "../components/Error.svelte";
+    import {goto} from "$app/navigation";
+    import {Button} from "flowbite-svelte";
 
     type RowData = { [key: string]: any };
 
@@ -101,13 +103,29 @@
 {/if}
 
 {#if sending}
-<div class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-    <h1 class="flex justify-center text-2xl font-bold my-4">Sending data</h1><br>
-    <p class="flex justify-center text-xl font-bold my-4">Please wait...</p>
-</div>
+    <div class="items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+        <h1 class="text-2xl font-bold my-4 text-center">
+            Sending data...
+        </h1>
+        <p class="text-xl font-bold my-4 text-center">
+            Please wait, this may take a few moments.
+        </p>
+    </div>
 {:else}
-        <div class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-            <h1 class="flex justify-center text-2xl font-bold my-4">Data sent successfully</h1><br>
-            <h2 class="flex justify-center text-2xl font-bold my-4">Please check the results in a few time using the following id: {doc_id} </h2>
-        </div>
+    <div class="items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+        <h1 class="text-2xl font-bold my-4 text-center">
+            Data sent successfully!
+        </h1>
+        <h2 class="text-2xl font-bold my-4 text-center">
+            Please check the results in a few minutes
+            using the following ID:
+            <span class="text-blue-600">{doc_id}</span>
+        </h2>
+        <Button
+                class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                on:click={() => goto('/')}
+        >
+            SDG Home
+        </Button>
+    </div>
 {/if}
