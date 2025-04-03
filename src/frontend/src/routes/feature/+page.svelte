@@ -12,7 +12,7 @@
 	let tableData: RowData[] = []; // Array of row data
 	let headers: string[] = []; // Array of column headers
 	let selectedColumns: string[] = []; // Array of selected column names
-	let showAlert: boolean = false; // Control visibility of the Alert
+	let showAlert: boolean = false;
 	let errorMessage:string;
 
 	onMount(() => {
@@ -41,10 +41,6 @@
 
 	// Submit the selected columns and navigate to the next page
 	function submitColumns(): void {
-		if (selectedColumns.length === 0) {
-			showAlert = true;
-			return;
-		}
 		showAlert = false; // Hide the Alert if columns are selected
 		sessionStorage.setItem('selectedColumns', JSON.stringify(selectedColumns));
 		goto("/function");
@@ -56,11 +52,8 @@
 {/if}
 
 <h1 class="flex justify-center text-2xl fon0t-bold my-4">Uploaded CSV Data</h1>
-<div class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+<div class="flex items-center justify-center h-screen">
 	<form on:submit|preventDefault={submitColumns}>
-		{#if showAlert}
-			<Error message="Please select at least one column"/>
-		{/if}
 		<FeaturesTable
 				headers={headers}
 				tableData={tableData}

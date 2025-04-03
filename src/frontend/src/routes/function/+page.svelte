@@ -17,20 +17,20 @@
     onMount(() => {
         const features = sessionStorage.getItem("selectedColumns");
         if (features) {
-            try {
-                featuresName = JSON.parse(features);
-                featuresName.forEach((feature) => {
-                    if (!featureFunction[feature]) {
-                        featureFunction[feature] = [];
-                    }
-                });
-            } catch (error) {
-                errorMessage="Error parsing selected columns:"+ error;
-            }
+            featuresName = JSON.parse(features);
+            featuresName.forEach((feature) => {
+                if (!featureFunction[feature]) {
+                    featureFunction[feature] = [];
+                }
+            });
         }
     });
 
     function submitFunctions(): void {
+        if (additionalRows <= 0) {
+            errorMessage="Additional rows cannot be zero or lower";
+            return;
+        }
         sessionStorage.setItem('featureFunction', JSON.stringify(featureFunction));
         sessionStorage.setItem('additionalRows', additionalRows.toString());
         goto("/parameters");
@@ -47,10 +47,12 @@
             on:submit|preventDefault={submitFunctions}
             class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
     >
+        {#if featuresName.length>0}
         <FunctionsTable
                 featuresName={featuresName}
                 featureFunction={featureFunction}
         />
+        {/if}
 
         <div class="flex items-center justify-center bg-gray-100 dark:bg-gray-900">
             <div class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">

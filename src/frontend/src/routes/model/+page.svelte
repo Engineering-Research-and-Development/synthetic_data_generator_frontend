@@ -1,7 +1,6 @@
 <script lang="ts">
     import ModelNew from "../components/ModelNew.svelte";
     import ModelPreTrained from "../components/ModelPreTrained.svelte";
-    import { Button } from "flowbite-svelte";
     import CancelButton from "../components/CancelButton.svelte";
     import NextButton from "../components/NextButton.svelte";
     import BackButton from "../components/BackButton.svelte";
@@ -91,6 +90,10 @@
     });
 
     function submitModels() {
+        if (selectedModel === undefined ) {
+            errorMessage = "Please select a model";
+            return
+        }
         sessionStorage.setItem('newModel', JSON.stringify(useNewModel));
         sessionStorage.setItem('selectedModel', JSON.stringify(selectedModel));
         goto("/preview")
@@ -102,49 +105,49 @@
 {/if}
 
 <h1 class="text-2xl font-bold text-center my-6">Choose the AI model to use</h1>
-<div class="flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+<div class="flex items-center justify-center bg-gray-100">
     <form on:submit|preventDefault={submitModels}
-          class="w-full p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
+          class="w-full p-6 bg-white rounded-lg shadow-md"
     >
         <!-- Models Side-by-Side -->
         <div class="flex w-full md:flex-row gap-6 mb-6">
+
+
             <!-- New Model Box -->
-            <div class={`w-1/2 p-4 border rounded-lg transition ${
-          useNewModel ? "border-blue-500" : "border-gray-300 opacity-50 pointer-events-none"
-      }`}
+            <div
+                class={`w-1/2 p-4 border rounded-lg transition cursor-pointer
+                ${useNewModel ? "border-blue-500" : "border-gray-300 opacity-50"}`}
+                role="button"
+                tabindex="0"
+                on:click={() => (useNewModel = true)}
+                on:keydown={(e) => (e.key === "Enter" || e.key === " ") && (useNewModel = true)}
             >
-                <h2 class="text-xl font-semibold mb-4 text-center">New Model</h2>
+                <h2 class="text-xl font-semibold mb-4 text-center">New model from blueprint</h2>
                 {#if !isLoading}
                     <ModelNew availableAlgorithms={algorithms} bind:selectedModel />
                 {:else}
                     <p>Loading...</p>
                 {/if}
-                <Button class="mt-4 w-full"
-                        color="blue"
-                        on:click={() => (useNewModel = false)}
-                >
-                    Use Pre-Trained Model
-                </Button>
             </div>
 
             <!-- Pre-Trained Model Box -->
-            <div class={`w-1/2 p-4 border rounded-lg transition ${
-          useNewModel ? "border-gray-300 opacity-50 pointer-events-none" : "border-blue-500"
-      }`}
+            <div
+                class={`w-1/2 p-4 border rounded-lg transition cursor-pointer
+                 ${useNewModel ? "border-gray-300 opacity-50" : "border-blue-500"}`}
+                role="button"
+                tabindex="0"
+                on:click={() => (useNewModel = false)}
+                on:keydown={(e) => (e.key === "Enter" || e.key === " ") && (useNewModel = false)}
             >
-                <h2 class="text-xl font-semibold mb-4 text-center">Pre-Trained Model</h2>
+                <h2 class="text-xl font-semibold mb-4 text-center">Use a pre-trained model</h2>
                 {#if !isLoading}
                     <ModelPreTrained trainedModels={trained_models} bind:selectedModel/>
                 {:else}
                     <p>Loading...</p>
                 {/if}
-                <Button class="mt-4 w-full"
-                        color="blue"
-                        on:click={() => (useNewModel = true)}
-                >
-                    Use New Model
-                </Button>
             </div>
+
+
         </div>
 
         <!-- Buttons Below -->

@@ -23,9 +23,6 @@
 
     onMount(async () => {
         selectedFunctions = JSON.parse(sessionStorage.getItem("featureFunction") || "{}");
-        if (Object.values(selectedFunctions).every(ids => ids.length === 0)) {
-            await goto("/model");
-        }
         try {
             // Collect all unique IDs from selectedFunctions
             const allFunctionIds = new Set<string>();
@@ -146,13 +143,13 @@
                     </TableBody>
                 </Table>
             {/each}
-            <div class="flex justify-end gap-4">
-                <BackButton />
-                <CancelButton />
-                <NextButton />
-            </div>
         {:else}
             <p class="text-gray-700">No functions selected or data available.</p>
         {/if}
+        <div class="flex justify-end gap-4">
+            <BackButton />
+            <CancelButton />
+            <NextButton />
+        </div>
     </form>
 </div>

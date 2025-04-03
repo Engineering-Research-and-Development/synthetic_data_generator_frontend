@@ -6,7 +6,7 @@
         TableBodyRow,
         TableHead,
         TableHeadCell,
-        Checkbox,
+        Checkbox, Button,
     } from 'flowbite-svelte';
 
     type RowData = { [key: string]: any };
@@ -17,13 +17,26 @@
     export let tableData: RowData[] = []; // Array of table rows
     export let selectedColumns: string[] = []; // Array of selected columns
     export let onToggleColumn: OnToggleColumn; // Function to handle column toggle
+
+    function onToggleColumnAll(header: string): void {
+        if (header === 'all') {
+            selectedColumns = selectedColumns.length === headers.length
+                ? [] // Unselect all
+                : headers; // Select all
+        } else {
+            selectedColumns = selectedColumns.includes(header)
+                ? selectedColumns.filter(name => name !== header) // Remove column
+                : [...selectedColumns, header]; // Add column
+        }
+    }
 </script>
 
-<Table class="w-3/4 text-gray-500 dark:text-gray-400" shadow>
-    <TableHead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+<Button class="" on:click={() => onToggleColumnAll('all')}>Select All Features</Button>
+<Table class=" w-3/4" shadow>
+    <TableHead class=" flex-auto text-center mx-auto text-xs text-gray-700 uppercase bg-gray-50">
         {#each headers as header}
             <TableHeadCell>
-                <div class="flex items-center space-x-2">
+                <div class="justify-center flex space-x-2">
                     <Checkbox
                             checked={selectedColumns.includes(header)}
                             on:change={() => onToggleColumn(header)}
@@ -35,7 +48,7 @@
     </TableHead>
     <TableBody tableBodyClass="divide-y">
         {#each tableData.slice(0, max_rows) as row}
-            <TableBodyRow class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <TableBodyRow class="justify-center text-center bg-white border-b">
                 {#each headers as header}
                     <TableBodyCell>
                         {row[header]}

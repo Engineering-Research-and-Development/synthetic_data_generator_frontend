@@ -28,7 +28,7 @@
 
 <div class="w-full">
         <Label>
-            Select an option
+            Select a blueprint
             <Select class="mt-2" items={algorithms} bind:value={algorithmName} />
         </Label>
 
@@ -63,7 +63,7 @@
                 </TableBody>
             </Table>
         {:else}
-            <p class="text-gray-500">Please select a model from the dropdown.</p>
+            <p class="text-gray-500">Please select a blueprint from the dropdown to see the details.</p>
         {/if}
     </div>
 </div>

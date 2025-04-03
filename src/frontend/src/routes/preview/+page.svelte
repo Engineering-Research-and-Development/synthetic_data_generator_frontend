@@ -113,7 +113,7 @@
 	<!-- Additional Rows -->
 	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
 		<h2 class="text-center text-xl font-semibold mb-4">Additional Rows</h2>
-		<p>{additionalRows}</p>
+		<p class="text-center">{additionalRows}</p>
 	</div>
 
 	<!-- Selected Functions -->
@@ -155,23 +155,22 @@
 	</div>
 
 
-
-	<!-- New Model -->
-	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">New Model</h2>
-		<p>{newModel ? "Yes" : "No"}</p>
-	</div>
-
 	<!-- Selected Model -->
 	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">Selected Model</h2>
+		<h2 class="text-center text-xl font-semibold mb-4">Selected Algorithm</h2>
 		{#if selectedModel}
-			<p>{selectedModel.name}
+			<p class="text-center">{selectedModel.name}
 			{#if (!newModel)}
 				Version {selectedModel.version}
 			{/if}
 			</p>
 		{/if}
+	</div>
+
+	<!-- New Model -->
+	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
+		<h2 class="text-center text-xl font-semibold mb-4">New Model</h2>
+		<p class="text-center">{newModel ? "Yes" : "No"}</p>
 	</div>
 
 	<!-- Send Button -->
