@@ -44,6 +44,8 @@
 
     <div class="w-full mt-8">
         {#if chosenAlgo}
+            Please assign a name to the model. It will appear in the "Pre-trained model" section once
+            the training is completed
             <Input type="text" id="model_name" required placeholder="Model Name" bind:value={newModelName}/>
             <br>
             <Table>
