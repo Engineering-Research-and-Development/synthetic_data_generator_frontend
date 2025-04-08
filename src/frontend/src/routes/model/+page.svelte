@@ -15,6 +15,7 @@
     let algorithms: NewAlgorithm[];
     let isLoading = true;
     let errorMessage: string;
+    let newModelName: string;
 
     onMount(async () => {
         try {
@@ -96,6 +97,7 @@
         }
         sessionStorage.setItem('newModel', JSON.stringify(useNewModel));
         sessionStorage.setItem('selectedModel', JSON.stringify(selectedModel));
+        sessionStorage.setItem('newModelName', JSON.stringify(newModelName))
         goto("/preview")
     }
 </script>
@@ -124,7 +126,7 @@
             >
                 <h2 class="text-xl font-semibold mb-4 text-center">New model from blueprint</h2>
                 {#if !isLoading}
-                    <ModelNew availableAlgorithms={algorithms} bind:selectedModel />
+                    <ModelNew availableAlgorithms={algorithms} bind:selectedModel bind:newModelName />
                 {:else}
                     <p>Loading...</p>
                 {/if}

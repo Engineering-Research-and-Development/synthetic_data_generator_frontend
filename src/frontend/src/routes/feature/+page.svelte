@@ -12,7 +12,6 @@
 	let tableData: RowData[] = []; // Array of row data
 	let headers: string[] = []; // Array of column headers
 	let selectedColumns: string[] = []; // Array of selected column names
-	let showAlert: boolean = false;
 	let errorMessage:string;
 
 	onMount(() => {
@@ -41,7 +40,6 @@
 
 	// Submit the selected columns and navigate to the next page
 	function submitColumns(): void {
-		showAlert = false; // Hide the Alert if columns are selected
 		sessionStorage.setItem('selectedColumns', JSON.stringify(selectedColumns));
 		goto("/function");
 	}

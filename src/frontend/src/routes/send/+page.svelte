@@ -5,9 +5,7 @@
     import {goto} from "$app/navigation";
     import {Button} from "flowbite-svelte";
 
-    type RowData = { [key: string]: any };
-
-    let userFile: RowData[] = [];
+    let userFile: Array<{number: Array<{string: number}>}> = [];
     let additionalRows: number = 0;
     let functionData: Record<string, Array<{
         functionId: number;
@@ -18,9 +16,9 @@
     let selectedModel: SelectedModel;
     let featuresCreated: FeaturesCreated[] = [];
     let errorMessage: string;
-    let sending: boolean = true
-    let doc_id: string
-
+    let sending: boolean = true;
+    let doc_id: string;
+    let newModelName: string;
     function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[] {
         let outFunctions: OutFunction[] = [];
 
@@ -58,6 +56,7 @@
         selectedModel = JSON.parse(sessionStorage.getItem("selectedModel") || "");
         userFile = JSON.parse(sessionStorage.getItem("userFile") || "{}");
         featuresCreated = JSON.parse(sessionStorage.getItem("featuresCreated") || "[]");
+        newModelName = JSON.parse(sessionStorage.getItem("newModelName") || "");
         await sendData()
     });
 
@@ -65,7 +64,7 @@
         let postData: SdgOut = {
             additional_rows: additionalRows,
             functions: generateOutFunctions(functionData),
-            ai_model: generateAiModel(newModel, "test_name", selectedModel.id, selectedModel.version),
+            ai_model: generateAiModel(newModel, newModelName, selectedModel.id, selectedModel.version),
         };
 
         if (userFile.length>0) {
@@ -75,7 +74,7 @@
             postData["features_created"] = featuresCreated
         }
 
-        console.log(JSON.stringify(postData));
+        console.debug(postData);
         try {
             const response = await fetch(`${BACKEND_URL}/sdg_input/`, {
                 method: "POST",
@@ -91,7 +90,7 @@
             doc_id = result.doc_id
             console.log("Data sent successfully:", result);
             sending = false
-            sessionStorage.clear();
+            //sessionStorage.clear();
         } catch (error) {
             errorMessage="Error sending data:"+ error;
         }

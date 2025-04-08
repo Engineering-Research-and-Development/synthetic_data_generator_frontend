@@ -1,10 +1,20 @@
 <script lang="ts">
-    import {Label,Select,Table,TableHead,TableBody,TableBodyCell,TableBodyRow,TableHeadCell} from 'flowbite-svelte';
+    import {
+        Label,
+        Select,
+        Table,
+        TableHead,
+        TableBody,
+        TableBodyCell,
+        TableBodyRow,
+        TableHeadCell,
+        Input
+    } from 'flowbite-svelte';
     import { onMount } from 'svelte';
 
     export let availableAlgorithms: NewAlgorithm[];
     export let selectedModel: SelectedModel
-
+    export let newModelName: string;
     let fetchedAlgorithms: NewAlgorithm[] = [];
     let chosenAlgo: typeof fetchedAlgorithms[number] | null = null;
     let algorithms: { value: string; name: string }[] = [];
@@ -34,6 +44,8 @@
 
     <div class="w-full mt-8">
         {#if chosenAlgo}
+            <Input type="text" id="model_name" required placeholder="Model Name" bind:value={newModelName}/>
+            <br>
             <Table>
                 <TableHead>
                     <TableHeadCell class="font-bold">Property</TableHeadCell>

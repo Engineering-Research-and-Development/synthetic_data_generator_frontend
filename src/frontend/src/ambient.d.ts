@@ -104,6 +104,6 @@ type SdgOut = {
     additional_rows: number;
     functions?: OutFunction[];
     ai_model: AIModel;
-    user_file?: object[];
+    user_file?: {number: {string: number}[]}[];
     features_created?: FeaturesCreated[];
 }

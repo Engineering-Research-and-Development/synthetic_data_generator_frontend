@@ -26,6 +26,7 @@
 	let headers: string[] = [];
 	let tableData: RowData[] = [];
 	let maxRowsToShow = 4;
+	let newModelName: string;
 
 	async function loadUserFile(): Promise<void> {
 		try {
@@ -45,6 +46,7 @@
 		newModel = JSON.parse(sessionStorage.getItem("newModel") || "false");
 		selectedModel = JSON.parse(sessionStorage.getItem("selectedModel") || "");
 		featuresCreated = JSON.parse(sessionStorage.getItem("featuresCreated") || "[]");
+		newModelName = JSON.parse(sessionStorage.getItem("newModelName") || "");
 	});
 
 
@@ -157,11 +159,13 @@
 
 	<!-- Selected Model -->
 	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">Selected Algorithm</h2>
+		<h2 class="text-center text-xl font-semibold mb-4">Selected Model</h2>
 		{#if selectedModel}
 			<p class="text-center">{selectedModel.name}
 			{#if (!newModel)}
 				Version {selectedModel.version}
+			{:else}
+				with name {newModelName}
 			{/if}
 			</p>
 		{/if}
