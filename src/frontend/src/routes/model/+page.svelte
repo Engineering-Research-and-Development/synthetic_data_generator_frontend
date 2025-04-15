@@ -15,7 +15,7 @@
     let algorithms: NewAlgorithm[];
     let isLoading = true;
     let errorMessage: string;
-    let newModelName: string;
+    let newModelName: string = "";
 
     onMount(async () => {
         try {

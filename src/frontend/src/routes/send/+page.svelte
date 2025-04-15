@@ -41,6 +41,13 @@
     }
 
     function generateAiModel(newModel: boolean, newModelName: string, selectedModelId: number,  selectedVersion?: string): AIModel{
+        if (newModelName === "") {
+            return {
+                selected_model_id: selectedModelId,
+                model_version: selectedVersion,
+                new_model: newModel,
+            }
+        }
         return {
             selected_model_id: selectedModelId,
             model_version: selectedVersion,

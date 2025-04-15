@@ -96,7 +96,7 @@ type OutFunction = {
 type AIModel = {
     selected_model_id: number;
     new_model: boolean;
-    new_model_name: string;
+    new_model_name?: string;
     model_version?: string;
 }
 
