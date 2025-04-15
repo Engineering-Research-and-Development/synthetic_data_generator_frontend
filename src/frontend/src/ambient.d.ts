@@ -107,3 +107,29 @@ type SdgOut = {
     user_file?: {number: {string: number}[]}[];
     features_created?: FeaturesCreated[];
 }
+
+////////////////////////////////
+type ColumnResult = {
+    column_data: number[];
+    column_name: string;
+    column_type: string;
+    column_datatype: string;
+}
+type Metric = {
+    title: string;
+    value: number | {string: number};
+    unit_measure : string;
+}
+
+type MetricReport = {
+    statistical_metrics: Metric[];
+    adherence_metrics: Metric[];
+    novelty_metrics: Metric[];
+}
+
+type CouchJson = {
+    _id: string;
+    _rev: string;
+    results: ColumnResult[];
+    metrics?: MetricReport
+}

@@ -4,13 +4,12 @@
     import {goto} from "$app/navigation";
 
     let documentId: string = '';
-    let documentData: any = null;
+    let documentData: CouchJson | null = null;
     let error: string | null = null;
     let errorMessage: string;
 
     async function fetchDocument() {
         errorMessage = "";
-        documentData = null;
         if (!documentId) {
             error = 'Please enter a document ID';
             return;
@@ -65,13 +64,14 @@
     {/if}
 
     {#if documentData}
+        <h2 class="text-xl font-bold mt-6 mb-4">Data preview</h2>
         <div class="overflow-x-auto">
             <Table>
                 <TableHead>
-                    <TableHeadCell>Column Name</TableHeadCell>
-                    <TableHeadCell>Column Type</TableHeadCell>
-                    <TableHeadCell>Column DataType</TableHeadCell>
-                    <TableHeadCell>Column Data</TableHeadCell>
+                    <TableHeadCell>Feature Name</TableHeadCell>
+                    <TableHeadCell>Feature Type</TableHeadCell>
+                    <TableHeadCell>Feature DataType</TableHeadCell>
+                    <TableHeadCell>Feature Data</TableHeadCell>
                 </TableHead>
                 <TableBody>
                     {#each documentData.results as column}
@@ -96,62 +96,89 @@
         <div class="overflow-x-auto">
             <Table>
                 <TableHead>
-
-                        <TableHeadCell>Metric Type</TableHeadCell>
-                        <TableHeadCell>Metric Name</TableHeadCell>
-                        <TableHeadCell>Metric Value</TableHeadCell>
-
+                    <TableHeadCell>Metric Type</TableHeadCell>
+                    <TableHeadCell>Metric Title</TableHeadCell>
+                    <TableHeadCell>Metric Value</TableHeadCell>
+                    <TableHeadCell>Unit</TableHeadCell>
                 </TableHead>
                 <TableBody>
                     <!-- Statistical Metrics -->
-                    {#each Object.entries(documentData.metrics.statistical_metrics) as [metricName, metricValue], i}
-                        <TableBodyRow>
-                            {#if i === 0}
-                                <TableBodyCell rowspan={Object.keys(documentData.metrics.statistical_metrics).length}>
-                                    Statistical Metrics
+                    {#if documentData.metrics?.statistical_metrics?.length}
+                        {#each documentData.metrics.statistical_metrics as metric, i}
+                            <TableBodyRow class="bg-orange-50">
+                                {#if i === 0}
+                                    <TableBodyCell rowspan={documentData.metrics.statistical_metrics.length}>
+                                        Statistical Metrics
+                                    </TableBodyCell>
+                                {/if}
+                                <TableBodyCell>{metric.title}</TableBodyCell>
+                                <TableBodyCell>
+                                    {#if typeof metric.value === 'object'}
+                                        <ul class="list-disc list-inside">
+                                            {#each Object.entries(metric.value) as [k, v]}
+                                                <li><strong>{k}</strong>: {v}</li>
+                                            {/each}
+                                        </ul>
+                                    {:else}
+                                        {metric.value}
+                                    {/if}
                                 </TableBodyCell>
-                            {/if}
-                            <TableBodyCell>{metricName}</TableBodyCell>
-                            <TableBodyCell>{metricValue}</TableBodyCell>
-                        </TableBodyRow>
-                    {/each}
+                                <TableBodyCell>{metric.unit_measure}</TableBodyCell>
+                            </TableBodyRow>
+                        {/each}
+                    {/if}
 
                     <!-- Adherence Metrics -->
-                    {#each Object.entries(documentData.metrics.adherence_metrics) as [metricType, metricData], i}
-                        {#if Object.keys(metricData).length > 0}
-                            {#each Object.entries(metricData) as [metricName, metricValue], j}
-                                <TableBodyRow>
-                                    {#if i === 0 && j === 0}
-                                        <TableBodyCell rowspan={Object.values(documentData.metrics.adherence_metrics).reduce((acc, curr) => acc + Object.keys(curr).length, 0)}>
-                                            Adherence Metrics
-                                        </TableBodyCell>
+                    {#if documentData.metrics?.adherence_metrics?.length}
+                        {#each documentData.metrics.adherence_metrics as metric, i}
+                            <TableBodyRow class="bg-blue-50">
+                                {#if i === 0}
+                                    <TableBodyCell rowspan={documentData.metrics.adherence_metrics.length}>
+                                        Adherence Metrics
+                                    </TableBodyCell>
+                                {/if}
+                                <TableBodyCell>{metric.title}</TableBodyCell>
+                                <TableBodyCell>
+                                    {#if typeof metric.value === 'object'}
+                                        <ul class="list-disc list-inside">
+                                            {#each Object.entries(metric.value) as [k, v]}
+                                                <li><strong>{k}</strong>: {v}</li>
+                                            {/each}
+                                        </ul>
+                                    {:else}
+                                        {metric.value}
                                     {/if}
-                                    <TableBodyCell/>
-                                    <TableBodyCell>{metricName}</TableBodyCell>
-                                    <TableBodyCell>{metricValue}</TableBodyCell>
-                                </TableBodyRow>
-                            {/each}
-                        {:else}
-                            <TableBodyRow>
-                                <TableBodyCell>Adherence Metrics</TableBodyCell>
-                                <TableBodyCell>{metricType}</TableBodyCell>
-                                <TableBodyCell>No data</TableBodyCell>
+                                </TableBodyCell>
+                                <TableBodyCell>{metric.unit_measure}</TableBodyCell>
                             </TableBodyRow>
-                        {/if}
-                    {/each}
+                        {/each}
+                    {/if}
 
                     <!-- Novelty Metrics -->
-                    {#each Object.entries(documentData.metrics.novelty_metrics) as [metricName, metricValue], i}
-                        <TableBodyRow>
-                            {#if i === 0}
-                                <TableBodyCell rowspan={Object.keys(documentData.metrics.novelty_metrics).length}>
-                                    Novelty Metrics
+                    {#if documentData.metrics?.novelty_metrics?.length}
+                        {#each documentData.metrics.novelty_metrics as metric, i}
+                            <TableBodyRow class="bg-green-50">
+                                {#if i === 0}
+                                    <TableBodyCell rowspan={documentData.metrics.novelty_metrics.length}>
+                                        Novelty Metrics
+                                    </TableBodyCell>
+                                {/if}
+                                <TableBodyCell>{metric.title}</TableBodyCell>
+                                <TableBodyCell>
+                                    {#if typeof metric.value === 'object'}
+                                        <ul class="list-disc list-inside">
+                                            {#each Object.entries(metric.value) as [k, v]}
+                                                <li><strong>{k}</strong>: {v}</li>
+                                            {/each}
+                                        </ul>
+                                    {:else}
+                                        {metric.value}
+                                    {/if}
                                 </TableBodyCell>
-                            {/if}
-                            <TableBodyCell>{metricName}</TableBodyCell>
-                            <TableBodyCell>{metricValue}</TableBodyCell>
-                        </TableBodyRow>
-                    {/each}
+                                <TableBodyCell>{metric.unit_measure}</TableBodyCell>
+                            </TableBodyRow>
+                        {/each}
+                    {/if}
                 </TableBody>
             </Table>
         </div>
