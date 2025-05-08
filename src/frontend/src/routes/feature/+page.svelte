@@ -6,7 +6,6 @@
 	import FeaturesTable from "../components/FeaturesTable.svelte";
 	import Error from "../components/Error.svelte";
 
-	// Define types for table data and functions
 	type RowData = { [key: string]: any }; // Represents a row of data with key-value pairs
 
 	let tableData: RowData[] = []; // Array of row data
@@ -49,7 +48,7 @@
 	<Error message={errorMessage}/>
 {/if}
 
-<h1 class="flex justify-center text-2xl fon0t-bold my-4">Uploaded CSV Data</h1>
+<h1 class="flex justify-center text-2xl fon0t-bold my-4">Uploaded Data</h1>
 <div class="flex items-center justify-center h-screen">
 	<form on:submit|preventDefault={submitColumns}>
 		<FeaturesTable
