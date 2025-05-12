@@ -48,8 +48,8 @@
 	<Error message={errorMessage}/>
 {/if}
 
-<h1 class="flex justify-center text-2xl fon0t-bold my-4">Uploaded Data</h1>
-<div class="flex items-center justify-center h-screen">
+<h1 class="text-3xl font-bold text-white justify-center flex">Feature Selection</h1>
+<div class="flex items-center justify-center">
 	<form on:submit|preventDefault={submitColumns}>
 		<FeaturesTable
 				headers={headers}

@@ -55,8 +55,7 @@
 	}
 </script>
 
-<h1 class="text-2xl font-bold text-center my-6">Review and Send Data</h1>
-
+<h1 class="text-3xl font-bold text-white justify-center flex">Review and Send Data</h1>
 <div class="flex flex-col gap-6 w-3/4 mx-auto">
 
 	<!-- Features Created -->

@@ -41,8 +41,8 @@
     <Error message={errorMessage}/>
 {/if}
 
-<h1 class="flex justify-center text-2xl font-bold my-4">Functions Selection</h1>
-<div class="flex items-center justify-center bg-white dark:bg-gray-900">
+<h1 class="text-3xl font-bold text-white justify-center flex">Functions Selection</h1>
+<div class="flex items-center justify-center">
     <form
             on:submit|preventDefault={submitFunctions}
             class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"

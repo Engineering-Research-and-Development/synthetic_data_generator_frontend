@@ -45,8 +45,7 @@
 	}
 </script>
 
-
-<h1 class="flex justify-center text-2xl font-bold my-4">Dataset Creation</h1>
+<h1 class="text-3xl font-bold text-white justify-center flex">Dataset Creation</h1>
 <form on:submit={submit}>
 	<Section name="tableheader" sectionClass="bg-gray-50 dark:bg-gray-900 flex flex-col items-center pt-8">
 		<!-- Centered "Add Feature" Button -->

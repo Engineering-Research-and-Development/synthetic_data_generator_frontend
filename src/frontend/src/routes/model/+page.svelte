@@ -106,10 +106,10 @@
     <Error message={errorMessage}/>
 {/if}
 
-<h1 class="text-2xl font-bold text-center my-6">Choose the AI model to use</h1>
-<div class="flex items-center justify-center bg-gray-100">
+<h1 class="text-3xl font-bold text-white justify-center flex">AI Model Selection</h1>
+<div class="flex items-center justify-center">
     <form on:submit|preventDefault={submitModels}
-          class="w-full p-6 bg-white rounded-lg shadow-md"
+          class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
     >
         <!-- Models Side-by-Side -->
         <div class="flex w-full md:flex-row gap-6 mb-6">

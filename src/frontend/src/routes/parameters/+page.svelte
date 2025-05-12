@@ -108,9 +108,10 @@
     <Error message={errorMessage}/>
 {/if}
 
-<h1 class="flex justify-center text-2xl font-bold my-4">Function Composition</h1>
-<div class="flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-    <form on:submit|preventDefault={saveFunctionData}>
+<h1 class="text-3xl font-bold text-white justify-center flex">Functions Composition</h1>
+<div class="flex items-center justify-center">
+    <form on:submit|preventDefault={saveFunctionData}
+          class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
         {#if Object.keys(functionData).length > 0}
             {#each Object.entries(functionData) as [feature, functionParameters]}
                 <h2 class="text-xl font-semibold mb-2 mt-4">Feature: {feature}</h2>

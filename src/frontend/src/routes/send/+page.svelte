@@ -101,30 +101,30 @@
     <Error message={errorMessage}/>
 {/if}
 
-{#if sending}
-    <div class="items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-        <h1 class="text-2xl font-bold my-4 text-center">
+<div class="flex flex-col gap-6 w-3/4 mx-auto">
+    {#if sending}
+        <h1 class="text-3xl font-bold text-white justify-center flex">
             Sending data...
         </h1>
-        <p class="text-xl font-bold my-4 text-center">
+        <p class="text-xl font-bold text-white justify-center flex">
             Please wait, this may take a few moments.
         </p>
-    </div>
-{:else}
-    <div class="items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-        <h1 class="text-2xl font-bold my-4 text-center">
+
+    {:else}
+
+        <h1 class="text-3xl font-bold text-white justify-center flex">
             Data sent successfully!
         </h1>
-        <h2 class="text-2xl font-bold my-4 text-center">
+        <h2 class="text-xl font-bold text-white justify-center flex">
             Please check the results in a few minutes
             using the following ID:
             <span class="text-blue-600">{doc_id}</span>
         </h2>
         <Button
-                class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                on:click={() => goto('/')}
+            class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            on:click={() => goto('/')}
         >
             SDG Home
         </Button>
-    </div>
-{/if}
+    {/if}
+</div>
