@@ -23,4 +23,3 @@ vite.config.ts.timestamp-*
 .idea/*
 src/frontend/bun.lockb
 src/frontend/docker-compose.yml
-src/frontend/package-lock.json
