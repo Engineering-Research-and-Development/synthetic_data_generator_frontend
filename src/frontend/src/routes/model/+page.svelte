@@ -8,6 +8,7 @@
     import { onMount } from "svelte";
     import { BACKEND_URL } from "../../stores/shared";
     import Error from "../components/Error.svelte";
+    import {get} from "svelte/store";
 
     let useNewModel = true;
     let selectedModel: SelectedModel;
@@ -19,7 +20,7 @@
 
     onMount(async () => {
         try {
-            const idsResponse = await fetch(BACKEND_URL + '/algorithms/');
+            const idsResponse = await fetch(get(BACKEND_URL)+ '/algorithms/');
             if (!idsResponse.ok) {
                 errorMessage=`Failed to fetch algorithms list: ${idsResponse.statusText}`;
             }
@@ -30,7 +31,7 @@
 
             algorithms = await Promise.all(
                 algorithm_ids.map(async (id) => {
-                    const response = await fetch(`${BACKEND_URL}/algorithms/${id}`);
+                    const response = await fetch(get(BACKEND_URL) + "/algorithms/" + id);
                     if (!response.ok) {
                         errorMessage=`Failed to fetch algorithm ${id}: ${response.statusText}`;
                     }
@@ -56,7 +57,7 @@
 
 
         try {
-            const idsResponse = await fetch(BACKEND_URL + '/trained_models/');
+            const idsResponse = await fetch(get(BACKEND_URL) + '/trained_models/');
             if (!idsResponse.ok) {
                 errorMessage=`Failed to fetch algorithms list: ${idsResponse.statusText}`;
             }
@@ -71,7 +72,7 @@
 
             trained_models = await Promise.all(
                 trained_model_ids.map(async (id) => {
-                    const response = await fetch(`${BACKEND_URL}/trained_models/${id}`);
+                    const response = await fetch(get(BACKEND_URL) + "/trained_models/" + "${id}");
                     if (!response.ok) {
                         errorMessage=`Failed to fetch algorithm ${id}: ${response.statusText}`;
                     }

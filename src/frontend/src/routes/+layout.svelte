@@ -8,7 +8,7 @@
     <title>ENG - Syntetic Data Generator</title>
 </svelte:head>
 
-<div class="h-screen w-screen bg-cover bg-center flex items-center justify-center"
+<div class="h-screen w-screen overflow-auto bg-cover bg-center flex items-center justify-center"
      style="background-image: url('/pexels-markusspiske-1089438.jpg');">
 
     <Navbar class="fixed top-0 bg-opacity-30 backdrop-blur-lg shadow-md">
@@ -22,7 +22,7 @@
         </NavUl>
     </Navbar>
 
-    <div class="bg-cover h-1/2 w-1/2">
+    <div class="bg-cover h-3/2 w-1/2">
         {@render children()}
     </div>
 </div>

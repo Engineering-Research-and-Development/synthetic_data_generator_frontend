@@ -4,6 +4,7 @@
     import Error from "../components/Error.svelte";
     import {goto} from "$app/navigation";
     import {Button} from "flowbite-svelte";
+    import {get} from "svelte/store";
 
     let userFile: Array<{number: Array<{string: number}>}> = [];
     let additionalRows: number = 0;
@@ -76,7 +77,7 @@
 
         console.debug(postData);
         try {
-            const response = await fetch(`${BACKEND_URL}/sdg_input/`, {
+            const response = await fetch(get(BACKEND_URL) + "/sdg_input/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import {BACKEND_URL} from "../../stores/shared";
     import Error from "./Error.svelte";
+    import {get} from "svelte/store";
 
     export let trainedModels:TrainedModel[];
     export let selectedModel: SelectedModel;
@@ -52,7 +53,7 @@
             if (models.model.algorithm_name !== undefined) {
                 return;
             }
-            const response = await fetch(BACKEND_URL +`/algorithms/${models.model.algorithm}`);
+            const response = await fetch(get(BACKEND_URL) +`/algorithms/${models.model.algorithm}`);
             const data = await response.json();
 
             if (data.algorithm) {

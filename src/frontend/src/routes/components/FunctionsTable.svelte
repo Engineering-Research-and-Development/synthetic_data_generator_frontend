@@ -11,6 +11,7 @@
     } from "flowbite-svelte";
     import { BACKEND_URL } from "../../stores/shared";
     import Error from "./Error.svelte";
+    import {get} from "svelte/store";
 
     export let featuresName: string[] = [];
     export let featureFunction: FeatureFunction = {};
@@ -19,7 +20,7 @@
     let errorMessage: string
     onMount(async () => {
         try {
-            const response = await fetch(BACKEND_URL +'/functions');
+            const response = await fetch(get(BACKEND_URL) +'/functions');
             if (response.ok) {
                 const data = await response.json();
 

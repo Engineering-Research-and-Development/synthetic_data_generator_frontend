@@ -16,6 +16,7 @@
     import CancelButton from "../components/CancelButton.svelte";
     import { goto } from "$app/navigation";
     import Error from "../components/Error.svelte";
+    import {get} from "svelte/store";
 
     let selectedFunctions: FeatureFunction = {};
     let functionData: Record<string, FunctionParameter[]> = {};
@@ -37,7 +38,7 @@
             // Fetch data for all unique IDs
             const responses = await Promise.all(
                 uniqueIds.map(async (id) => {
-                    const response = await fetch(`${BACKEND_URL}/functions/${id}`);
+                    const response = await fetch(get(BACKEND_URL) + "/functions/"+ id);
 
                     if (!response.ok) {
                         errorMessage=`HTTP error! Status: ${response.status}`;
