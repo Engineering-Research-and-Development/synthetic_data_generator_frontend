@@ -72,7 +72,7 @@
 
             trained_models = await Promise.all(
                 trained_model_ids.map(async (id) => {
-                    const response = await fetch(get(BACKEND_URL) + "/trained_models/" + "${id}");
+                    const response = await fetch(get(BACKEND_URL) + "/trained_models/" + `${id}`);
                     if (!response.ok) {
                         errorMessage=`Failed to fetch algorithm ${id}: ${response.statusText}`;
                     }
