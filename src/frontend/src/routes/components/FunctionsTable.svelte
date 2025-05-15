@@ -20,7 +20,7 @@
     let errorMessage: string
     onMount(async () => {
         try {
-            const response = await fetch(get(BACKEND_URL) +'/functions');
+            const response = await fetch(get(BACKEND_URL) +'/functions/');
             if (response.ok) {
                 const data = await response.json();
 
