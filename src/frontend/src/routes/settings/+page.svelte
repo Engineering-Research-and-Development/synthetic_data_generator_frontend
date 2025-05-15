@@ -1,18 +1,13 @@
 <script lang="ts">
-    import { BACKEND_URL } from '../../stores/shared';
+    import {BACKEND_URL, COUCH_URL} from '../../stores/shared';
     import { Input, Toast } from 'flowbite-svelte';
     import { FireOutline } from "flowbite-svelte-icons";
+    import {get} from "svelte/store";
 
-    let backendUrl: string = '';
+    let backendUrl: string = get(BACKEND_URL);
+    let couchUrl: string = get(COUCH_URL);
     let error: string | null = null;
     let message: string | null = null;
-
-    const unsubscribe = BACKEND_URL.subscribe(value => {
-        backendUrl = value;
-    });
-
-    import { onDestroy } from 'svelte';
-    onDestroy(unsubscribe);
 
     const validateUrl = (url: string): boolean => {
         try {
@@ -22,16 +17,15 @@
             return false;
         }
     };
-
-    const handleSubmit = () => {
+    const sanitizeUrl = (url: string): string => {
         error = null;
 
         // Trim and ensure no trailing slash
-        const sanitizedUrl = backendUrl.trim().replace(/\/+$/, '');
+        const sanitizedUrl = url.trim().replace(/\/+$/, '');
 
         if (!sanitizedUrl) {
             error = 'URL is required';
-            return;
+            return "";
         }
 
         // Add https:// if no protocol is specified
@@ -42,11 +36,20 @@
 
         if (!validateUrl(finalUrl)) {
             error = 'URL must start with http:// or https:// and be a valid URL';
+            return "";
+        }
+        return finalUrl;
+    }
+    const handleSubmit = () => {
+        backendUrl = sanitizeUrl(backendUrl);
+        couchUrl = sanitizeUrl(couchUrl);
+        if (!backendUrl || !couchUrl) {
             return;
         }
 
-        BACKEND_URL.set(finalUrl);
-        message = 'Backend URL updated successfully';
+        BACKEND_URL.set(backendUrl);
+        COUCH_URL.set(couchUrl);
+        message = 'URL updated successfully';
     };
 </script>
 
@@ -73,6 +76,20 @@
             {#if error}
                 <p class="mt-2 text-sm text-red-600 dark:text-red-500">{error}</p>
             {/if}
+
+            <label for="backend-url" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                CouchDB  URL
+            </label>
+            <Input
+                    id="couch-url"
+                    bind:value={couchUrl}
+                    type="text"
+                    placeholder="https://api.example.com"
+                    class="w-full"
+            />
+            {#if error}
+                <p class="mt-2 text-sm text-red-600 dark:text-red-500">{error}</p>
+            {/if}
         </div>
 
         <button
@@ -86,6 +103,12 @@
     <div class="mt-4 p-4 bg-gray-100 rounded-lg dark:bg-gray-700">
         <p class="text-sm text-gray-700 dark:text-gray-300">
             Current Backend URL: <span class="font-mono text-blue-600 dark:text-blue-400">{$BACKEND_URL}</span>
+        </p>
+    </div>
+
+    <div class="mt-4 p-4 bg-gray-100 rounded-lg dark:bg-gray-700">
+        <p class="text-sm text-gray-700 dark:text-gray-300">
+            Current Couch URL: <span class="font-mono text-blue-600 dark:text-blue-400">{$COUCH_URL}</span>
         </p>
     </div>
 </div>
