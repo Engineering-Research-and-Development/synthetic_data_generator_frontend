@@ -5,7 +5,7 @@
     import {COUCH_URL} from "../../stores/shared";
     import {get} from "svelte/store";
 
-    let documentId: string = '5d6fc6a781d3d0b06f35c974840005b0';
+    let documentId: string;
     let documentData: CouchJson | null = null;
     let error: string | null = null;
     let errorMessage: string;

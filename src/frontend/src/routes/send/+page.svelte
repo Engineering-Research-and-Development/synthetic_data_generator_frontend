@@ -20,7 +20,7 @@
     let sending: boolean = true;
     let doc_id: string;
     let newModelName: string;
-    function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[] {
+    function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[]  {
         let outFunctions: OutFunction[] = [];
 
         for (const [feature, functions] of Object.entries(featureFunctions)) {
@@ -64,10 +64,12 @@
     async function sendData() {
         let postData: SdgOut = {
             additional_rows: additionalRows,
-            functions: generateOutFunctions(functionData),
             ai_model: generateAiModel(newModel, newModelName, selectedModel.id, selectedModel.version),
         };
-
+        let outFunctions = generateOutFunctions(functionData)
+        if (outFunctions.length>0) {
+            postData["functions"] = outFunctions
+        }
         if (userFile.length>0) {
             postData["user_file"]= userFile
         }
@@ -75,7 +77,7 @@
             postData["features_created"] = featuresCreated
         }
 
-        console.debug(postData);
+        console.log(postData);
         try {
             const response = await fetch(get(BACKEND_URL) + "/sdg_input/", {
                 method: "POST",
