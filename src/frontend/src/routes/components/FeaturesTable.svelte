@@ -13,6 +13,7 @@
     type OnToggleColumn = (header: string) => void;
 
     let max_rows = 10; // Maximum number of rows to display
+    const max_elements_to_show = 2; // Maximum number of elements to display in each cell
     export let headers: string[] = []; // Array of table headers
     export let tableData: RowData[] = []; // Array of table rows
     export let selectedColumns: string[] = []; // Array of selected columns
@@ -29,11 +30,33 @@
                 : [...selectedColumns, header]; // Add column
         }
     }
+
+    // Helper function to truncate array data
+    function truncateData(data: any): string {
+        // If it's already an array
+        if (Array.isArray(data)) {
+            const truncated = data.slice(0, max_elements_to_show);
+            return `${truncated.join(', ')}${data.length > max_elements_to_show ? '...' : ''}`;
+        }
+
+        if (typeof data === 'string' && data.startsWith('[') && data.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(data);
+                if (Array.isArray(parsed)) {
+                    const truncated = parsed.slice(0, max_elements_to_show);
+                    return `${truncated.join(', ')}${parsed.length > max_elements_to_show ? '...' : ''}`;
+                }
+            } catch (e) {
+                // If parsing fails, return the original string
+            }
+        }
+        return data;
+    }
 </script>
 
 <Button class="" on:click={() => onToggleColumnAll('all')}>Select All Features</Button>
-<Table class=" w-3/4" shadow>
-    <TableHead class=" flex-auto text-center mx-auto text-xs text-gray-700 uppercase bg-gray-50">
+<Table class="w-3/4" shadow>
+    <TableHead class="flex-auto text-center mx-auto text-xs text-gray-700 uppercase bg-gray-50">
         {#each headers as header}
             <TableHeadCell>
                 <div class="justify-center flex space-x-2">
@@ -51,7 +74,7 @@
             <TableBodyRow class="justify-center text-center bg-white border-b">
                 {#each headers as header}
                     <TableBodyCell>
-                        {row[header]}
+                        {truncateData(row[header])}
                     </TableBodyCell>
                 {/each}
             </TableBodyRow>
