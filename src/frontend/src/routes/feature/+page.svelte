@@ -6,11 +6,11 @@
 	import FeaturesTable from "../components/FeaturesTable.svelte";
 	import Error from "../components/Error.svelte";
 
-	type RowData = { [key: string]: any }; // Represents a row of data with key-value pairs
+	type RowData = { [key: string]: any };
 
-	let tableData: RowData[] = []; // Array of row data
-	let headers: string[] = []; // Array of column headers
-	let selectedColumns: string[] = []; // Array of selected column names
+	let tableData: RowData[] = [];
+	let headers: string[] = [];
+	let selectedColumns: string[] = [];
 	let errorMessage:string;
 
 	onMount(() => {
@@ -30,13 +30,6 @@
 		}
 	});
 
-	// Toggle a column's selection
-	function toggleColumn(column: string): void {
-		selectedColumns = selectedColumns.includes(column)
-				? selectedColumns.filter(name => name !== column) // Remove column
-				: [...selectedColumns, column]; // Add column
-	}
-
 	// Submit the selected columns and navigate to the next page
 	function submitColumns(): void {
 		sessionStorage.setItem('selectedColumns', JSON.stringify(selectedColumns));
@@ -54,8 +47,7 @@
 		<FeaturesTable
 				headers={headers}
 				tableData={tableData}
-				selectedColumns={selectedColumns}
-				onToggleColumn={toggleColumn}
+				bind:selectedColumns
 		/>
 		<div class="flex justify-end gap-4">
 			<CancelButton />

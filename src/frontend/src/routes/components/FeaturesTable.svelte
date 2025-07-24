@@ -10,24 +10,24 @@
     } from 'flowbite-svelte';
 
     type RowData = { [key: string]: any };
-    type OnToggleColumn = (header: string) => void;
 
     let max_rows = 10; // Maximum number of rows to display
     const max_elements_to_show = 2; // Maximum number of elements to display in each cell
     export let headers: string[] = []; // Array of table headers
     export let tableData: RowData[] = []; // Array of table rows
     export let selectedColumns: string[] = []; // Array of selected columns
-    export let onToggleColumn: OnToggleColumn; // Function to handle column toggle
 
-    function onToggleColumnAll(header: string): void {
-        if (header === 'all') {
-            selectedColumns = selectedColumns.length === headers.length
-                ? [] // Unselect all
-                : headers; // Select all
+    function toggleColumn(column: string): void {
+        selectedColumns = selectedColumns.includes(column)
+            ? selectedColumns.filter(name => name !== column) // Remove column
+            : [...selectedColumns, column]; // Add column
+    }
+
+    function toggleColumnAll(): void {
+        if (selectedColumns.length === headers.length) {
+            selectedColumns = [];
         } else {
-            selectedColumns = selectedColumns.includes(header)
-                ? selectedColumns.filter(name => name !== header) // Remove column
-                : [...selectedColumns, header]; // Add column
+            selectedColumns = headers;
         }
     }
 
@@ -54,7 +54,7 @@
     }
 </script>
 
-<Button class="" on:click={() => onToggleColumnAll('all')}>Select All Features</Button>
+<Button class="" on:click={() => toggleColumnAll()}>Select All Features</Button>
 <Table class="w-3/4" shadow>
     <TableHead class="flex-auto text-center mx-auto text-xs text-gray-700 uppercase bg-gray-50">
         {#each headers as header}
@@ -62,7 +62,7 @@
                 <div class="justify-center flex space-x-2">
                     <Checkbox
                             checked={selectedColumns.includes(header)}
-                            on:change={() => onToggleColumn(header)}
+                            on:change={() => toggleColumn(header)}
                     />
                     <span>{header}</span>
                 </div>

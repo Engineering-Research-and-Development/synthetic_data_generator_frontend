@@ -14,7 +14,7 @@ type Parameter = {
 
 type FunctionParameter = {
     function: AIFunction;
-    parameter: Parameter[];
+    parameters: Parameter[];
 };
 
 

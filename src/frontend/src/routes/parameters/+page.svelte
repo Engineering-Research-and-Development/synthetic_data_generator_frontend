@@ -84,7 +84,7 @@
                     parameters: [] as Array<Parameter>
                 };
 
-                for (const param of functionParameter.parameter) {
+                for (const param of functionParameter.parameters) {
                     const inputElement = document.getElementById(`param-${functionParameter.function.id}-${param.id}`) as HTMLInputElement;
                     if (inputElement) {
                         functionEntry.parameters.push({
@@ -110,45 +110,55 @@
 {/if}
 
 <h1 class="text-3xl font-bold text-white justify-center flex">Functions Composition</h1>
+
 <div class="flex items-center justify-center">
-    <form on:submit|preventDefault={saveFunctionData}
-          class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        {#if Object.keys(functionData).length > 0}
-            {#each Object.entries(functionData) as [feature, functionParameters]}
-                <h2 class="text-xl font-semibold mb-2 mt-4">Feature: {feature}</h2>
-                <Table class="w-full">
-                    <TableHead class="bg-gray-200">
-                        <TableHeadCell class="w-1/3">Name</TableHeadCell>
-                        <TableHeadCell class="w-1/3">Description</TableHeadCell>
-                        <TableHeadCell class="w-1/3">Parameters</TableHeadCell>
-                    </TableHead>
-                    <TableBody>
-                        {#each functionParameters as functionParameter}
-                            <TableBodyRow>
-                                <TableBodyCell>{functionParameter.function.name}</TableBodyCell>
-                                <TableBodyCell>{functionParameter.function.description}</TableBodyCell>
-                                <TableBodyCell>
-                                    {#each functionParameter.parameter as param}
-                                        <Label for={`param-${functionParameter.function.id}-${param.id}`} class="block text-sm font-medium text-gray-700">
-                                            {param.name} ({param.parameter_type}):
-                                        </Label>
-                                        <Input
-                                                id={`param-${functionParameter.function.id}-${param.id}`}
-                                                type="number" step="0.01"
-                                                placeholder={param.value}
-                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        />
-                                    {/each}
-                                </TableBodyCell>
-                            </TableBodyRow>
-                        {/each}
-                    </TableBody>
-                </Table>
-            {/each}
-        {:else}
-            <p class="text-gray-700">No functions selected or data available.</p>
-        {/if}
-        <div class="flex justify-end gap-4">
+    <form
+        on:submit|preventDefault={saveFunctionData}
+        class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 w-full max-w-6xl"
+    >
+        <div class="max-h-[600px] overflow-y-auto pr-2">
+            {#if Object.keys(functionData).length > 0}
+                {#each Object.entries(functionData) as [feature, functionParameters]}
+                    <h2 class="text-xl font-semibold mb-2 mt-4">Feature: {feature}</h2>
+                    <Table class="w-full">
+                        <TableHead class="bg-gray-200">
+                            <TableHeadCell class="w-1/3">Name</TableHeadCell>
+                            <TableHeadCell class="w-1/3">Description</TableHeadCell>
+                            <TableHeadCell class="w-1/3">Parameters</TableHeadCell>
+                        </TableHead>
+                        <TableBody>
+                            {#each functionParameters as functionParameter}
+                                <TableBodyRow>
+                                    <TableBodyCell>{functionParameter.function.name}</TableBodyCell>
+                                    <TableBodyCell>{functionParameter.function.description}</TableBodyCell>
+                                    <TableBodyCell>
+                                        {#each functionParameter.parameters as param}
+                                            <Label
+                                                    for={`param-${functionParameter.function.id}-${param.id}`}
+                                                    class="block text-sm font-medium text-gray-700"
+                                            >
+                                                {param.name} ({param.parameter_type}):
+                                            </Label>
+                                            <Input
+                                                    id={`param-${functionParameter.function.id}-${param.id}`}
+                                                    type="number"
+                                                    step="0.01"
+                                                    placeholder={param.value}
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            />
+                                        {/each}
+                                    </TableBodyCell>
+                                </TableBodyRow>
+                            {/each}
+                        </TableBody>
+                    </Table>
+                {/each}
+            {:else}
+                <p class="text-gray-700">No functions selected or data available.</p>
+            {/if}
+        </div>
+
+        <div class="flex justify-end gap-4 mt-4">
             <BackButton />
             <CancelButton />
             <NextButton />
