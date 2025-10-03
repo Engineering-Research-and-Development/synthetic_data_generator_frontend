@@ -1,0 +1,370 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "synthetic_data_generator_frontend-SBOM",
+  "documentNamespace": "https://github.com/Engineering-Research-and-Development/synthetic_data_generator_frontend",
+  "creationInfo": {
+    "created": "2024-01-15T00:00:00Z",
+    "creators": [
+      "Tool: SBOM-Generator",
+      "Organization: Engineering-Research-and-Development"
+    ]
+  },
+  "packages": [
+    {
+      "name": "synthetic_data_generator_frontend",
+      "SPDXID": "SPDXRef-Package-root",
+      "versionInfo": "0.0.0",
+      "packageFileName": "package.json",
+      "downloadLocation": "https://github.com/Engineering-Research-and-Development/synthetic_data_generator_frontend",
+      "filesAnalyzed": false,
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "description": "Frontend for synthetic data generator"
+    },
+    {
+      "name": "@sveltejs/adapter-auto",
+      "SPDXID": "SPDXRef-Package-adapter-auto",
+      "versionInfo": "3.0.0",
+      "downloadLocation": "https://registry.npmjs.org/@sveltejs/adapter-auto/-/adapter-auto-3.0.0.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@sveltejs/adapter-node",
+      "SPDXID": "SPDXRef-Package-adapter-node",
+      "versionInfo": "5.2.11",
+      "downloadLocation": "https://registry.npmjs.org/@sveltejs/adapter-node/-/adapter-node-5.2.11.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@sveltejs/kit",
+      "SPDXID": "SPDXRef-Package-kit",
+      "versionInfo": "2.0.0",
+      "downloadLocation": "https://registry.npmjs.org/@sveltejs/kit/-/kit-2.0.0.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@sveltejs/vite-plugin-svelte",
+      "SPDXID": "SPDXRef-Package-vite-plugin-svelte",
+      "versionInfo": "5.0.3",
+      "downloadLocation": "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-5.0.3.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@tailwindcss/aspect-ratio",
+      "SPDXID": "SPDXRef-Package-aspect-ratio",
+      "versionInfo": "0.4.2",
+      "downloadLocation": "https://registry.npmjs.org/@tailwindcss/aspect-ratio/-/aspect-ratio-0.4.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@tailwindcss/container-queries",
+      "SPDXID": "SPDXRef-Package-container-queries",
+      "versionInfo": "0.1.1",
+      "downloadLocation": "https://registry.npmjs.org/@tailwindcss/container-queries/-/container-queries-0.1.1.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@tailwindcss/forms",
+      "SPDXID": "SPDXRef-Package-forms",
+      "versionInfo": "0.5.9",
+      "downloadLocation": "https://registry.npmjs.org/@tailwindcss/forms/-/forms-0.5.9.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@tailwindcss/typography",
+      "SPDXID": "SPDXRef-Package-typography",
+      "versionInfo": "0.5.15",
+      "downloadLocation": "https://registry.npmjs.org/@tailwindcss/typography/-/typography-0.5.15.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "@types/d3",
+      "SPDXID": "SPDXRef-Package-types-d3",
+      "versionInfo": "7.4.3",
+      "downloadLocation": "https://registry.npmjs.org/@types/d3/-/d3-7.4.3.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "autoprefixer",
+      "SPDXID": "SPDXRef-Package-autoprefixer",
+      "versionInfo": "10.4.20",
+      "downloadLocation": "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.20.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "caniuse-lite",
+      "SPDXID": "SPDXRef-Package-caniuse-lite",
+      "versionInfo": "1.0.30001727",
+      "downloadLocation": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001727.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "CC-BY-4.0",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "d3",
+      "SPDXID": "SPDXRef-Package-d3",
+      "versionInfo": "7.9.0",
+      "downloadLocation": "https://registry.npmjs.org/d3/-/d3-7.9.0.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "flowbite",
+      "SPDXID": "SPDXRef-Package-flowbite",
+      "versionInfo": "2.5.2",
+      "downloadLocation": "https://registry.npmjs.org/flowbite/-/flowbite-2.5.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "flowbite-svelte",
+      "SPDXID": "SPDXRef-Package-flowbite-svelte",
+      "versionInfo": "0.47.4",
+      "downloadLocation": "https://registry.npmjs.org/flowbite-svelte/-/flowbite-svelte-0.47.4.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "flowbite-svelte-blocks",
+      "SPDXID": "SPDXRef-Package-flowbite-svelte-blocks",
+      "versionInfo": "1.1.4",
+      "downloadLocation": "https://registry.npmjs.org/flowbite-svelte-blocks/-/flowbite-svelte-blocks-1.1.4.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "flowbite-svelte-icons",
+      "SPDXID": "SPDXRef-Package-flowbite-svelte-icons",
+      "versionInfo": "2.0.2",
+      "downloadLocation": "https://registry.npmjs.org/flowbite-svelte-icons/-/flowbite-svelte-icons-2.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "svelte",
+      "SPDXID": "SPDXRef-Package-svelte",
+      "versionInfo": "5.0.0",
+      "downloadLocation": "https://registry.npmjs.org/svelte/-/svelte-5.0.0.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "svelte-check",
+      "SPDXID": "SPDXRef-Package-svelte-check",
+      "versionInfo": "4.0.0",
+      "downloadLocation": "https://registry.npmjs.org/svelte-check/-/svelte-check-4.0.0.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "svelte-heros",
+      "SPDXID": "SPDXRef-Package-svelte-heros",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/svelte-heros/-/svelte-heros-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "svelte-local-storage-store",
+      "SPDXID": "SPDXRef-Package-svelte-local-storage-store",
+      "versionInfo": "0.6.4",
+      "downloadLocation": "https://registry.npmjs.org/svelte-local-storage-store/-/svelte-local-storage-store-0.6.4.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "svelte-routing",
+      "SPDXID": "SPDXRef-Package-svelte-routing",
+      "versionInfo": "2.13.0",
+      "downloadLocation": "https://registry.npmjs.org/svelte-routing/-/svelte-routing-2.13.0.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "tailwindcss",
+      "SPDXID": "SPDXRef-Package-tailwindcss",
+      "versionInfo": "3.4.9",
+      "downloadLocation": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.4.9.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "typescript",
+      "SPDXID": "SPDXRef-Package-typescript",
+      "versionInfo": "5.0.0",
+      "downloadLocation": "https://registry.npmjs.org/typescript/-/typescript-5.0.0.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "vite",
+      "SPDXID": "SPDXRef-Package-vite",
+      "versionInfo": "6.3.5",
+      "downloadLocation": "https://registry.npmjs.org/vite/-/vite-6.3.5.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-Package-root",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-DOCUMENT"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-adapter-auto",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-adapter-node",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-kit",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-vite-plugin-svelte",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-aspect-ratio",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-container-queries",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-forms",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-typography",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-types-d3",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-autoprefixer",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-caniuse-lite",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d3",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-flowbite",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-flowbite-svelte",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-flowbite-svelte-blocks",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-flowbite-svelte-icons",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-svelte",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-svelte-check",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-svelte-heros",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-svelte-local-storage-store",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-svelte-routing",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-tailwindcss",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-typescript",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-vite",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    }
+  ]
+}
