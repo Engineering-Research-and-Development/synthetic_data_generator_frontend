@@ -93,7 +93,7 @@
             doc_id = result.doc_id
             console.log("Data sent successfully:", result);
             sending = false
-            //sessionStorage.clear();
+            sessionStorage.clear();
         } catch (error) {
             errorMessage="Error sending data:"+ error;
         }

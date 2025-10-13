@@ -108,7 +108,7 @@
 {/if}
 
 <h1 class="text-3xl font-bold text-white justify-center flex">AI Model Selection</h1>
-<div class="flex items-center justify-center">
+<div class="items-center justify-center max-w-full max-h-72">
     <form on:submit|preventDefault={submitModels}
           class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
     >

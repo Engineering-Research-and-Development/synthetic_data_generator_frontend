@@ -42,7 +42,7 @@
 {/if}
 
 <h1 class="text-3xl font-bold text-white justify-center flex">Feature Selection</h1>
-<div class="flex items-center justify-center">
+<div class="items-center justify-center max-w-full max-h-60">
 	<form on:submit|preventDefault={submitColumns}>
 		<FeaturesTable
 				headers={headers}
