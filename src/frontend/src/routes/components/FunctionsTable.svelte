@@ -17,7 +17,8 @@
     export let featureFunction: FeatureFunction = {};
 
     let shownFunctions: { value: string; name: string;}[] = [];
-    let errorMessage: string
+    let errorMessage: string;
+
     onMount(async () => {
         try {
             const response = await fetch(get(BACKEND_URL) +'/functions/');
@@ -26,7 +27,7 @@
 
                 const fetchedFunctions: FunctionParameter[] = data.map((functionParameter: FunctionParameter) => ({
                     function: functionParameter.function,
-                    parameter: functionParameter.parameter
+                    parameter: functionParameter.parameters
                 }));
 
                 shownFunctions = fetchedFunctions.map((Function) => ({
@@ -45,18 +46,20 @@
 </script>
 
 {#if errorMessage}
-<Error message={errorMessage}/>
+    <Error message={errorMessage}/>
 {/if}
 
-<Table class="w-3/4 text-gray-500 self-center dark:text-gray-400">
-    <TableHead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        {#each featuresName as feature}
-            <TableHeadCell>{feature}</TableHeadCell>
-        {/each}
+<Table class="w-full text-gray-500 self-center mb-[150px]">
+    <TableHead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <TableHeadCell>Feature</TableHeadCell>
+        <TableHeadCell>Functions</TableHeadCell>
     </TableHead>
     <TableBody tableBodyClass="divide-y">
-        <TableBodyRow class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            {#each featuresName as feature}
+        {#each featuresName as feature}
+            <TableBodyRow class="bg-white border-b">
+                <TableBodyCell class="font-medium text-gray-900 ">
+                    {feature}
+                </TableBodyCell>
                 <TableBodyCell>
                     <MultiSelect
                             items={shownFunctions}
@@ -66,11 +69,7 @@
                             on:change={() => updateFunctions(feature, featureFunction[feature])}
                     />
                 </TableBodyCell>
-            {/each}
-        </TableBodyRow>
-    </TableBody>
-    <TableBody tableBodyClass="divide-y">
-        <TableBodyRow class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 h-96">
-        </TableBodyRow>
+            </TableBodyRow>
+        {/each}
     </TableBody>
 </Table>

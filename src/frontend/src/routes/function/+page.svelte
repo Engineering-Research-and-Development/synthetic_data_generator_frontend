@@ -42,7 +42,7 @@
 {/if}
 
 <h1 class="text-3xl font-bold text-white justify-center flex">Functions Selection</h1>
-<div class="flex items-center justify-center">
+<div class="items-center justify-center max-h-72 ">
     <form
             on:submit|preventDefault={submitFunctions}
             class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
@@ -54,8 +54,8 @@
         />
         {/if}
 
-        <div class="flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <div class="flex items-center justify-center bg-white">
+            <div class="p-18 bg-white rounded-lg ">
                 <Label for="additional_rows" class="block mb-2">Additional number of rows to create</Label>
                 <ButtonGroup>
                     <InputAddon>
