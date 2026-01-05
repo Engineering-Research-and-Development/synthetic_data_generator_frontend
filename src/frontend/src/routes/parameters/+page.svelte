@@ -2,149 +2,184 @@
     import { onMount } from 'svelte';
     import {
         Table,
-        TableBodyRow,
+        TableBody,
         TableBodyCell,
+        TableBodyRow,
         TableHead,
         TableHeadCell,
-        TableBody,
         Label,
         Input
     } from 'flowbite-svelte';
-    import { BACKEND_URL } from "../../stores/shared";
-    import NextButton from "../components/NextButton.svelte";
-    import BackButton from "../components/BackButton.svelte";
-    import CancelButton from "../components/CancelButton.svelte";
-    import { goto } from "$app/navigation";
-    import Error from "../components/Error.svelte";
-    import {get} from "svelte/store";
+    import { Section } from 'flowbite-svelte-blocks';
+    import { goto } from '$app/navigation';
+    import { get } from 'svelte/store';
 
-    let selectedFunctions: FeatureFunction = {};
-    let functionData: Record<string, FunctionParameter[]> = {};
-    let errorMessage: string;
+    import { BACKEND_URL } from '../../stores/shared';
+    import { Endpoints } from '$lib/config/uiEndpoints';
 
-    onMount(async () => {
-        selectedFunctions = JSON.parse(sessionStorage.getItem("featureFunction") || "{}");
+    import PageHeading from '../components/PageHeading.svelte';
+    import Error from '../components/Error.svelte';
+    import Footer from '../components/Footer.svelte';
+
+    import type {FeatureFunction, SavedFunction, SavedFunctionData} from '../../types/ambient';
+    import type { FunctionParameter } from '../../types/ambient';
+
+
+    type FunctionDataByFeature = Record<string, FunctionParameter[]>;
+
+    let functionData: FunctionDataByFeature = {};
+    let errorMessage: string | null = null;
+
+    onMount(loadFunctionData);
+
+    /* ──────────────────────────────
+       Lifecycle / Data loading
+    ────────────────────────────── */
+
+    async function loadFunctionData(): Promise<void> {
         try {
-            // Collect all unique IDs from selectedFunctions
-            const allFunctionIds = new Set<string>();
-            for (const ids of Object.values(selectedFunctions)) {
-                ids.forEach(id => allFunctionIds.add(id));
-            }
+            const selectedFunctions = readSelectedFunctions();
+            const functionIds = collectUniqueIds(selectedFunctions);
+            const functions = await fetchFunctions(functionIds);
 
-            // Fetch data for all unique IDs
-            const fetchedData: Record<string, FunctionParameter[]> = {};
-            const uniqueIds = Array.from(allFunctionIds);
-
-            // Fetch data for all unique IDs
-            const responses = await Promise.all(
-                uniqueIds.map(async (id) => {
-                    const response = await fetch(get(BACKEND_URL) + "/functions/"+ id);
-
-                    if (!response.ok) {
-                        errorMessage=`HTTP error! Status: ${response.status}`;
-                    }
-
-                    return response.json();
-                })
-            );
-
-            // Associate the fetched data with the corresponding feature
-            uniqueIds.forEach((id, index) => {
-                const functionParameter = responses[index] as FunctionParameter;
-                for (const [feature, ids] of Object.entries(selectedFunctions)) {
-                    if (ids.includes(id)) {
-                        if (!fetchedData[feature]) {
-                            fetchedData[feature] = [];
-                        }
-                        fetchedData[feature].push(functionParameter);
-                    }
-                }
-            });
-
-            functionData = fetchedData;
+            functionData = groupByFeature(selectedFunctions, functionIds, functions);
         } catch (error) {
-            errorMessage="Error fetching data:"+ error;
+            errorMessage = String(error);
         }
-    });
+    }
 
-    function saveFunctionData() {
-        const functionDataToSave: Record<string, Array<{
-            functionId: number;
-            functionName: string;
-            parameters: Array<Parameter>
-        }>> = {};
+    function readSelectedFunctions(): FeatureFunction {
+        return JSON.parse(
+            sessionStorage.getItem('featureFunction') ?? '{}'
+        );
+    }
 
-        for (const [feature, functionParameters] of Object.entries(functionData)) {
-            functionDataToSave[feature] = [];
+    function collectUniqueIds(features: FeatureFunction): string[] {
+        return [...new Set(Object.values(features).flat())];
+    }
 
-            for (const functionParameter of functionParameters) {
-                const functionEntry = {
-                    functionId: functionParameter.function.id,
-                    functionName: functionParameter.function.name,
-                    parameters: [] as Array<Parameter>
-                };
+    async function fetchFunctions(ids: string[]): Promise<FunctionParameter[]> {
+        const backendUrl = get(BACKEND_URL);
 
-                for (const param of functionParameter.parameters) {
-                    const inputElement = document.getElementById(`param-${functionParameter.function.id}-${param.id}`) as HTMLInputElement;
-                    if (inputElement) {
-                        functionEntry.parameters.push({
-                            id: param.id,
-                            parameter_type: param.parameter_type,
-                            name: param.name,
-                            value: inputElement.value
-                        });
+        const results = await Promise.allSettled(
+            ids.map(id =>
+                fetch(`${backendUrl}/functions/${id}`).then(res => {
+                    if (!res.ok) {
+                        errorMessage=`HTTP error! Status: ${res.status}`;
                     }
-                }
+                    return res.json();
+                })
+            )
+        );
 
-                functionDataToSave[feature].push(functionEntry);
+        return results
+            .filter(r => r.status === 'fulfilled')
+            .map(r => r.value as FunctionParameter);
+    }
+
+    function groupByFeature(
+        features: FeatureFunction,
+        ids: string[],
+        functions: FunctionParameter[]
+    ): FunctionDataByFeature {
+        const result: FunctionDataByFeature = {};
+
+        functions.forEach((fn, index) => {
+            const id = ids[index];
+
+            for (const [feature, featureIds] of Object.entries(features)) {
+                if (featureIds.includes(id)) {
+                    result[feature] ??= [];
+                    result[feature].push(fn);
+                }
             }
+        });
+
+        return result;
+    }
+
+    /* ──────────────────────────────
+       Save (output DTO)
+    ────────────────────────────── */
+
+    function save(): void {
+        const output = buildSavePayload(functionData);
+
+        sessionStorage.setItem('functionData', JSON.stringify(output));
+        goto(Endpoints.modelPage);
+    }
+
+    function buildSavePayload(
+        data: FunctionDataByFeature
+    ): SavedFunctionData {
+        const result: SavedFunctionData = {};
+
+        for (const [feature, functions] of Object.entries(data)) {
+            result[feature] = functions.map(toSavedFunction);
         }
 
-        sessionStorage.setItem("functionData", JSON.stringify(functionDataToSave));
-        goto("/model");
+        return result;
+    }
+
+    function toSavedFunction(fp: FunctionParameter): SavedFunction {
+        return {
+            functionId: fp.function.id,
+            functionName: fp.function.name,
+            parameters: fp.parameters.map(p => ({
+                id: p.id,
+                value: p.value
+            }))
+        };
     }
 </script>
 
-{#if errorMessage}
-    <Error message={errorMessage}/>
-{/if}
+<Section>
+    {#if errorMessage}
+        <Error message={errorMessage} />
+    {/if}
 
-<h1 class="text-3xl font-bold text-white justify-center flex">Functions Composition</h1>
+    <PageHeading text="Function composition" />
 
-<div class="flex items-center justify-center">
     <form
-        on:submit|preventDefault={saveFunctionData}
-        class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 w-full max-w-6xl"
+            on:submit|preventDefault={save}
+            class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 w-full max-w-6xl"
     >
         <div class="max-h-[600px] overflow-y-auto pr-2">
             {#if Object.keys(functionData).length > 0}
-                {#each Object.entries(functionData) as [feature, functionParameters]}
-                    <h2 class="text-xl font-semibold mb-2 mt-4">Feature: {feature}</h2>
-                    <Table class="w-full">
+                {#each Object.entries(functionData) as [feature, functions]}
+                    <h2 class="text-xl font-semibold mt-6 mb-4">
+                        Feature: {feature}
+                    </h2>
+
+                    <Table>
                         <TableHead class="bg-gray-200">
-                            <TableHeadCell class="w-1/3">Name</TableHeadCell>
-                            <TableHeadCell class="w-1/3">Description</TableHeadCell>
-                            <TableHeadCell class="w-1/3">Parameters</TableHeadCell>
+                            <TableHeadCell>Name</TableHeadCell>
+                            <TableHeadCell>Description</TableHeadCell>
+                            <TableHeadCell>Parameters</TableHeadCell>
                         </TableHead>
+
                         <TableBody>
-                            {#each functionParameters as functionParameter}
+                            {#each functions as fn}
                                 <TableBodyRow>
-                                    <TableBodyCell>{functionParameter.function.name}</TableBodyCell>
-                                    <TableBodyCell>{functionParameter.function.description}</TableBodyCell>
                                     <TableBodyCell>
-                                        {#each functionParameter.parameters as param}
-                                            <Label
-                                                    for={`param-${functionParameter.function.id}-${param.id}`}
-                                                    class="block text-sm font-medium text-gray-700"
-                                            >
-                                                {param.name} ({param.parameter_type}):
+                                        {fn.function.name}
+                                    </TableBodyCell>
+
+                                    <TableBodyCell>
+                                        {fn.function.description}
+                                    </TableBodyCell>
+
+                                    <TableBodyCell>
+                                        {#each fn.parameters as param}
+                                            <Label class="block text-sm font-medium">
+                                                {param.name} ({param.parameter_type})
                                             </Label>
+
                                             <Input
-                                                    id={`param-${functionParameter.function.id}-${param.id}`}
                                                     type="number"
                                                     step="0.01"
-                                                    placeholder={param.value}
-                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    bind:value={param.value}
+                                                    class="mt-1 mb-2 w-full"
                                             />
                                         {/each}
                                     </TableBodyCell>
@@ -154,14 +189,11 @@
                     </Table>
                 {/each}
             {:else}
-                <p class="text-gray-700">No functions selected or data available.</p>
+                <p class="text-gray-600">
+                    No functions selected or data available.
+                </p>
             {/if}
         </div>
-
-        <div class="flex justify-end gap-4 mt-4">
-            <BackButton />
-            <CancelButton />
-            <NextButton />
-        </div>
+        <Footer />
     </form>
-</div>
+</Section>

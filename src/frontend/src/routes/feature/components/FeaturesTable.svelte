@@ -6,16 +6,16 @@
         TableBodyRow,
         TableHead,
         TableHeadCell,
-        Checkbox, Button,
+        Checkbox
     } from 'flowbite-svelte';
-
-    type RowData = { [key: string]: any };
+    import type {RowData} from "../../../types/table";
 
     let max_rows = 10; // Maximum number of rows to display
     const max_elements_to_show = 2; // Maximum number of elements to display in each cell
-    export let headers: string[] = []; // Array of table headers
-    export let tableData: RowData[] = []; // Array of table rows
-    export let selectedColumns: string[] = []; // Array of selected columns
+
+    export let tableHeader: string[] = [];
+    export let tableData: RowData[] = [];
+    export let selectedColumns: string[] = [];
 
     function toggleColumn(column: string): void {
         selectedColumns = selectedColumns.includes(column)
@@ -23,13 +23,6 @@
             : [...selectedColumns, column]; // Add column
     }
 
-    function toggleColumnAll(): void {
-        if (selectedColumns.length === headers.length) {
-            selectedColumns = [];
-        } else {
-            selectedColumns = headers;
-        }
-    }
 
     // Helper function to truncate array data
     function truncateData(data: any): string {
@@ -54,10 +47,9 @@
     }
 </script>
 
-<Button class="" on:click={() => toggleColumnAll()}>Select All Features</Button>
 <Table class="w-3/4" shadow>
     <TableHead class="flex-auto text-center mx-auto text-xs text-gray-700 uppercase bg-gray-50">
-        {#each headers as header}
+        {#each tableHeader as header}
             <TableHeadCell>
                 <div class="justify-center flex space-x-2">
                     <Checkbox
@@ -72,7 +64,7 @@
     <TableBody tableBodyClass="divide-y">
         {#each tableData.slice(0, max_rows) as row}
             <TableBodyRow class="justify-center text-center bg-white border-b">
-                {#each headers as header}
+                {#each tableHeader as header}
                     <TableBodyCell>
                         {truncateData(row[header])}
                     </TableBodyCell>

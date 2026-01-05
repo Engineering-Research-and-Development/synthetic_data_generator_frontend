@@ -2,10 +2,10 @@
 	import { Section} from "flowbite-svelte-blocks";
 	import { Button, Select } from "flowbite-svelte";
 	import { CircleMinusSolid, CirclePlusSolid } from "flowbite-svelte-icons";
-	import BackButton from "../components/BackButton.svelte";
-	import CancelButton from "../components/CancelButton.svelte";
-	import NextButton from "../components/NextButton.svelte";
 	import { goto } from "$app/navigation";
+	import Footer from "../components/Footer.svelte";
+	import PageHeading from "../components/PageHeading.svelte";
+	import type {FeaturesCreated} from "../../types/ambient";
 
 	let features: FeaturesCreated[] = [];
 	let types = [
@@ -45,58 +45,56 @@
 	}
 </script>
 
-<h1 class="text-3xl font-bold text-white justify-center flex">Dataset Creation</h1>
-<form on:submit={submit}>
-	<Section name="tableheader" sectionClass="bg-gray-50 dark:bg-gray-900 flex flex-col items-center pt-8">
-		<!-- Centered "Add Feature" Button -->
-		<div class="w-full flex justify-center mb-4">
-			<Button type="button" on:click={addFeature} class="flex items-center">
-				<CirclePlusSolid class="h-5 w-5" />
-				Add feature
-			</Button>
-		</div>
+<Section>
+	<PageHeading text="Dataset Creation from scratch"/>
+	<form on:submit={submit}>
+		<Section name="tableheader" sectionClass="bg-gray-50 dark:bg-gray-900 flex flex-col items-center pt-8">
+			<!-- Centered "Add Feature" Button -->
+			<div class="w-full flex justify-center mb-4">
+				<Button type="button" on:click={addFeature} class="flex items-center">
+					<CirclePlusSolid class="h-5 w-5" />
+					Add feature
+				</Button>
+			</div>
 
-		<!-- Feature Input Rows -->
-		<div class="w-full p-4 overflow-y-auto" style="max-height: 50vh;">
-			{#each features as feature, index}
-				<div class="flex gap-4 mb-4 items-center">
-					<!-- Delete button with minus icon -->
-					<Button type="button" on:click={() => removeFeature(index)} color="red" class="p-2">
-						<CircleMinusSolid class="h-5 w-5" />
-					</Button>
-					<input
-							type="text"
-							class="w-1/2 p-2 border rounded"
-							placeholder="Feature Name"
-							bind:value={feature.feature}
-							required
-					/>
-					<Select
-							bind:value={feature.type}
-							class="w-1/2 p-2 border rounded"
-							required
-					>
-						{#each types as t}
-							<option value={t.value}>{t.name}</option>
-						{/each}
-					</Select>
-					<Select
-							bind:value={feature.category}
-							class="w-1/2 p-2 border rounded"
-							required
-					>
-						{#each subTypes as t}
-							<option value={t.value}>{t.name}</option>
-						{/each}
-					</Select>
-				</div>
-			{/each}
-		</div>
-	</Section>
+			<!-- Feature Input Rows -->
+			<div class="w-full p-4 overflow-y-auto" style="max-height: 50vh;">
+				{#each features as feature, index}
+					<div class="flex gap-4 mb-4 items-center">
+						<!-- Delete button with minus icon -->
+						<Button type="button" on:click={() => removeFeature(index)} color="red" class="p-2">
+							<CircleMinusSolid class="h-5 w-5" />
+						</Button>
+						<input
+								type="text"
+								class="w-1/2 p-2 border rounded"
+								placeholder="Feature Name"
+								bind:value={feature.feature}
+								required
+						/>
+						<Select
+								bind:value={feature.type}
+								class="w-1/2 p-2 border rounded"
+								required
+						>
+							{#each types as t}
+								<option value={t.value}>{t.name}</option>
+							{/each}
+						</Select>
+						<Select
+								bind:value={feature.category}
+								class="w-1/2 p-2 border rounded"
+								required
+						>
+							{#each subTypes as t}
+								<option value={t.value}>{t.name}</option>
+							{/each}
+						</Select>
+					</div>
+				{/each}
+			</div>
+		</Section>
 
-	<div class="flex justify-end gap-4">
-		<BackButton />
-		<CancelButton />
-		<NextButton />
-	</div>
-</form>
+		<Footer/>
+	</form>
+</Section>

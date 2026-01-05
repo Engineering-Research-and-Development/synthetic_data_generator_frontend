@@ -11,6 +11,8 @@
         Input
     } from 'flowbite-svelte';
     import { onMount } from 'svelte';
+    import type {SelectedModel} from "../../../types/ambient";
+    import type {NewAlgorithm} from "../../../types/algorithms";
 
     export let availableAlgorithms: NewAlgorithm[];
     export let selectedModel: SelectedModel

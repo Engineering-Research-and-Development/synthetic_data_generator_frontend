@@ -58,7 +58,6 @@
 
             reader.readAsText(uploadedFile);
         } catch (error) {
-            console.error('Error during file upload:', error);
             alert('An error occurred while uploading the file. Please try again.');
         }
         isSubmitting = false;

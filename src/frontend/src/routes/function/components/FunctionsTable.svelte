@@ -9,9 +9,10 @@
         TableHeadCell,
         MultiSelect,
     } from "flowbite-svelte";
-    import { BACKEND_URL } from "../../stores/shared";
-    import Error from "./Error.svelte";
+    import { BACKEND_URL } from "../../../stores/shared";
+    import Error from "../../components/Error.svelte";
     import {get} from "svelte/store";
+    import type {FeatureFunction, FunctionParameter} from "../../../types/ambient";
 
     export let featuresName: string[] = [];
     export let featureFunction: FeatureFunction = {};
@@ -49,15 +50,15 @@
     <Error message={errorMessage}/>
 {/if}
 
-<Table class="w-full text-gray-500 self-center mb-[150px]">
-    <TableHead class="text-xs text-gray-700 uppercase bg-gray-50">
+<Table class="table-fixed border">
+    <TableHead>
         <TableHeadCell>Feature</TableHeadCell>
         <TableHeadCell>Functions</TableHeadCell>
     </TableHead>
-    <TableBody tableBodyClass="divide-y">
+    <TableBody>
         {#each featuresName as feature}
-            <TableBodyRow class="bg-white border-b">
-                <TableBodyCell class="font-medium text-gray-900 ">
+            <TableBodyRow>
+                <TableBodyCell>
                     {feature}
                 </TableBodyCell>
                 <TableBodyCell>
@@ -65,7 +66,6 @@
                             items={shownFunctions}
                             bind:value={featureFunction[feature]}
                             placeholder="Select Functions"
-                            class="text-gray-700 self-start"
                             on:change={() => updateFunctions(feature, featureFunction[feature])}
                     />
                 </TableBodyCell>

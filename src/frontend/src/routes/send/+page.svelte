@@ -5,6 +5,13 @@
     import {goto} from "$app/navigation";
     import {Button} from "flowbite-svelte";
     import {get} from "svelte/store";
+    import {Section} from "flowbite-svelte-blocks";
+    import type {
+        FeaturesCreated,
+        Parameter,
+        SelectedModel
+    } from "../../types/ambient";
+    import type {AIModel, OutFunction, OutParameter, SdgOut} from "../../types/middlewarePost";
 
     let userFile: Array<{number: Array<{string: number}>}> = [];
     let additionalRows: number = 0;
@@ -100,34 +107,36 @@
     }
 </script>
 
-{#if errorMessage}
-    <Error message={errorMessage}/>
-{/if}
-
-<div class="flex flex-col gap-6 w-3/4 mx-auto">
-    {#if sending}
-        <h1 class="text-3xl font-bold text-white justify-center flex">
-            Sending data...
-        </h1>
-        <p class="text-xl font-bold text-white justify-center flex">
-            Please wait, this may take a few moments.
-        </p>
-
-    {:else}
-
-        <h1 class="text-3xl font-bold text-white justify-center flex">
-            Data sent successfully!
-        </h1>
-        <h2 class="text-xl font-bold text-white justify-center flex">
-            Please check the results in a few minutes
-            using the following ID:
-            <span class="text-blue-600">{doc_id}</span>
-        </h2>
-        <Button
-            class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            on:click={() => goto('/')}
-        >
-            SDG Home
-        </Button>
+<Section>
+    {#if errorMessage}
+        <Error message={errorMessage}/>
     {/if}
-</div>
+
+    <div class="flex flex-col gap-6 w-3/4 mx-auto">
+        {#if sending}
+            <h1 class="text-3xl font-bold text-white justify-center flex">
+                Sending data...
+            </h1>
+            <p class="text-xl font-bold text-white justify-center flex">
+                Please wait, this may take a few moments.
+            </p>
+
+        {:else}
+
+            <h1 class="text-3xl font-bold text-white justify-center flex">
+                Data sent successfully!
+            </h1>
+            <h2 class="text-xl font-bold text-white justify-center flex">
+                Please check the results in a few minutes
+                using the following ID:
+                <span class="text-blue-600">{doc_id}</span>
+            </h2>
+            <Button
+                class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                on:click={() => goto('/')}
+            >
+                SDG Home
+            </Button>
+        {/if}
+    </div>
+</Section>

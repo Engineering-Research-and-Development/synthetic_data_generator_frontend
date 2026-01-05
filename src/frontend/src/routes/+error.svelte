@@ -1,110 +1,61 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-
-    interface ConfettiItem {
-        emoji: string;
-        left: number;
-        speed: number;
-        delay: number;
-    }
-
-    let isConfetti: boolean = false;
-    const emojis: string[] = ['🎉', '🎊', '✨', '🌟', '💫', '🥳'];
-    let confettiItems: ConfettiItem[] = [];
-
-    const throwConfetti = (): void => {
-        isConfetti = true;
-        confettiItems = Array(20).fill(null).map((): ConfettiItem => ({
-            emoji: emojis[Math.floor(Math.random() * emojis.length)],
-            left: Math.random() * 100,
-            speed: 1 + Math.random() * 3,
-            delay: Math.random() * 2
-        }));
-
-        setTimeout(() => isConfetti = false, 3000);
-    };
-
-    // Optional: Auto-trigger confetti on first visit
-    onMount(() => {
-        const hasSeenError = sessionStorage.getItem('seenError');
-        if (!hasSeenError) {
-            throwConfetti();
-            sessionStorage.setItem('seenError', 'true');
-        }
-    });
+    import { ExclamationTriangle, Home, ArrowPath } from 'svelte-heros-v2';
+    import {Section} from "flowbite-svelte-blocks";
 </script>
 
-<div class="max-w-2xl mx-auto p-8 text-center">
-    <!-- Confetti elements -->
-    {#if isConfetti}
-        {#each confettiItems as item, i (i)}
-            <div
-                    class="fixed text-2xl z-50 pointer-events-none"
-                    style="left: {item.left}vw;
-               animation: fall {item.speed}s linear {item.delay}s forwards;"
-            >
-                {item.emoji}
-            </div>
-        {/each}
+<Section class="min-h-screen flex items-center justify-center bg-gray-900 px-6">
+    <div class="max-w-xl w-full text-center space-y-6">
 
-        <style>
-            @keyframes fall {
-                to {
-                    transform: translateY(100vh) rotate(360deg);
-                    opacity: 0;
-                }
-            }
-        </style>
-    {/if}
-
-    <h1 class="text-5xl font-extrabold text-red-500 mb-2">404: Page Not Found</h1>
-    <p class="text-gray-200 italic">(But we found this cool error message!)</p>
-
-    <div class="my-8 flex justify-center">
-        <div class="w-48 h-48 bg-yellow-300 rounded-full flex items-center justify-center relative">
-            <!-- Eyes -->
-            <div class="w-12 h-12 bg-gray-800 rounded-full absolute top-12 left-10"></div>
-            <div class="w-12 h-12 bg-gray-800 rounded-full absolute top-12 right-10"></div>
-            <!-- Mouth -->
-            <div class="w-24 h-4 bg-gray-800 rounded-full absolute bottom-12"></div>
-            <!-- Eyebrows -->
-            <div class="w-6 h-6 absolute top-8 left-8 transform rotate-45">
-                <div class="w-full h-1 bg-gray-800"></div>
-                <div class="w-1 h-full bg-gray-800 ml-1"></div>
-            </div>
-            <div class="w-6 h-6 absolute top-8 right-8 transform -rotate-45">
-                <div class="w-full h-1 bg-gray-800"></div>
-                <div class="w-1 h-full bg-gray-800 mr-1"></div>
+        <!-- Icon -->
+        <div class="flex justify-center">
+            <div class="p-4 rounded-full bg-red-100 dark:bg-red-900/30">
+                <ExclamationTriangle class="w-12 h-12 text-red-600 dark:text-red-400" />
             </div>
         </div>
-    </div>
 
-    <p class="text-xl mb-4 text-white">Looks like you took a wrong turn at Albuquerque.</p>
-    <p class="text-xl mb-8 text-white">Don't worry, even GPS makes mistakes sometimes.</p>
+        <!-- Error code -->
+        <h1 class="text-6xl font-extrabold text-white tracking-tight">
+            404
+        </h1>
 
-    <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-        <a
-                href="/"
-                class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full transition-all hover:scale-105 focus:ring-4 focus:ring-green-300"
-        >
-            Take Me Home
-        </a>
-        <button
-                on:click={throwConfetti}
-                class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition-all hover:scale-105 focus:ring-4 focus:ring-blue-300"
-                aria-label="Throw confetti"
-        >
-            Make It Rain Confetti
-        </button>
-    </div>
-
-    <div class="bg-gray-100 p-4 rounded-lg">
-        <p class="text-sm text-gray-700">
-            <span class="font-bold">Error Code:</span> 404-UH-OH<br>
-            <span class="font-bold">Technical details:</span> The page you're looking for is currently on vacation.
+        <p class="text-xl font-medium text-gray-300">
+            Page not found
         </p>
-        <p class="text-xs text-gray-500 mt-2">
-            Need help? Try turning it off and on again. Or <a href="/contact" class="text-blue-500 hover:underline">contact support</a>.
+
+        <p class="text-gray-400 max-w-md mx-auto">
+            The page you are trying to access does not exist, has been moved,
+            or is temporarily unavailable.
         </p>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+            <a
+                    href="/"
+                    class="inline-flex items-center justify-center gap-2 px-6 py-3
+				       rounded-lg bg-blue-600 hover:bg-blue-700
+				       text-white font-semibold
+				       focus:ring-4 focus:ring-blue-300 transition"
+            >
+                <Home class="w-5 h-5" />
+                Go to Home
+            </a>
+
+            <button
+                    on:click={() => location.reload()}
+                    class="inline-flex items-center justify-center gap-2 px-6 py-3
+				       rounded-lg bg-gray-700 hover:bg-gray-600
+				       text-white font-semibold
+				       focus:ring-4 focus:ring-gray-400 transition"
+            >
+                <ArrowPath class="w-5 h-5" />
+                Reload
+            </button>
+        </div>
+
+        <!-- Technical footer -->
+        <p class="pt-6 text-sm text-gray-500">
+            Error code: <span class="font-mono">HTTP_404</span>
+        </p>
+
     </div>
-</div>
+</Section>

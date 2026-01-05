@@ -1,67 +1,113 @@
 <script lang="ts">
-    import { Label, Select, Table, TableHead, TableBody, TableBodyCell, TableBodyRow, TableHeadCell } from 'flowbite-svelte';
+    import {
+        Label,
+        Select,
+        Table,
+        TableHead,
+        TableBody,
+        TableBodyCell,
+        TableBodyRow,
+        TableHeadCell
+    } from 'flowbite-svelte';
+
     import { onMount } from 'svelte';
-    import {BACKEND_URL} from "../../stores/shared";
-    import Error from "./Error.svelte";
-    import {get} from "svelte/store";
+    import { get } from 'svelte/store';
+    import { BACKEND_URL } from '../../../stores/shared';
+    import Error from '../../components/Error.svelte';
+    import type {SelectedModel} from "../../../types/ambient";
+    import type {TrainedModel} from "../../../types/models";
 
-    export let trainedModels:TrainedModel[];
-    export let selectedModel: SelectedModel;
 
+    let {
+        trainedModels,
+        selectedModel
+    }: {
+        trainedModels: TrainedModel[];
+        selectedModel: SelectedModel;
+    } = $props();
 
-    let chosenModel: string;
-    let fetchedPreTrainedModels: TrainedModel[] = [];
+    let chosenModel: string = $state("");
+    let selectedVersion: string= $state("");
+    let errorMessage: string | undefined= $state("");
 
-    let models: typeof fetchedPreTrainedModels[number] | null = null;
-    let selectedVersionLabel: { value: string; name: string }[] = [];
-    let newModels: { value: string; name: string }[] = [];
+    let newModels: { value: string; name: string }[] = $state([]);
 
-    let versionInfo: Version | null = null;
-    let featureType: FeatureType[] = [];
-    let errorMessage:string;
-    let selectedVersion: string;
+    const models = $derived(
+        trainedModels.find(
+            (model) => model.model.name === chosenModel
+        ) ?? null
+    );
 
-    onMount(async () => {
+    const selectedVersionLabel = $derived(
+        models
+            ? models.versions.map((version) => ({
+                value: version.version_name,
+                name: version.version_name.toString()
+            }))
+            : []
+    );
+
+    const versionInfo = $derived(
+        models && selectedVersion
+            ? models.versions.find(
+            (version) =>
+                version.version_name === selectedVersion
+        ) ?? null
+            : null
+    );
+
+    const featureType = $derived(
+        models ? models.datatypes : []
+    );
+
+    onMount(() => {
         try {
             newModels = trainedModels.map((model) => ({
                 value: model.model.name,
                 name: model.model.name
             }));
         } catch (error) {
-            errorMessage='Error fetching trained models:' + error;
+            errorMessage = `Error fetching trained models: ${error}`;
         }
     });
 
-    $: {
-        models = trainedModels.find((model) => model.model.name === chosenModel) || null;
-        fetchAlgorithmName();
-        selectedVersionLabel = models ? models.versions.map((version) => ({ value: version.version_name, name: version.version_name.toString() })) : [];
-
-        if (selectedVersion && models) {
-            versionInfo = models.versions.find((version) => version.version_name === selectedVersion) || null;
-            featureType = models.datatypes;
-            selectedModel ={id: models.model.id, name: models.model.name, version: selectedVersion}
+    $effect(() => {
+        if (!models || !selectedVersion) {
+            return;
         }
-    }
 
-    async function fetchAlgorithmName() {
+        selectedModel = {
+            id: models.model.id,
+            name: models.model.name,
+            version: selectedVersion
+        };
+    });
+
+    $effect(() => {
+        if (!models) {
+            return;
+        }
+
+        if (models.model.algorithm_name !== undefined) {
+            return;
+        }
+
+        fetchAlgorithmName(models);
+    });
+
+    async function fetchAlgorithmName(model: TrainedModel): Promise<void> {
         try {
-            if (models == null) {
-                return
-            }
+            const response = await fetch(
+                `${get(BACKEND_URL)}/algorithms/${model.model.algorithm}`
+            );
 
-            if (models.model.algorithm_name !== undefined) {
-                return;
-            }
-            const response = await fetch(get(BACKEND_URL) +`/algorithms/${models.model.algorithm}`);
             const data = await response.json();
 
-            if (data.algorithm) {
-                models.model.algorithm_name = data.algorithm.name
-
+            if (data?.algorithm?.name) {
+                model.model.algorithm_name = data.algorithm.name;
             }
         } catch (error) {
-            errorMessage='Error fetching training info and feature schema:'+ error;
+            errorMessage = `Error fetching algorithm info: ${error}`;
         }
     }
 </script>

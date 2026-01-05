@@ -1,25 +1,23 @@
 <script lang="ts">
-	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		TableHead,
-		TableHeadCell,
-	} from 'flowbite-svelte';
 	import { Button } from 'flowbite-svelte';
 	import BackButton from "../components/BackButton.svelte";
 	import CancelButton from "../components/CancelButton.svelte";
 	import {onMount} from "svelte";
 	import {goto} from "$app/navigation";
-	type RowData = { [key: string]: any };
+	import {Endpoints} from "$lib/config/uiEndpoints";
+	import {Section} from "flowbite-svelte-blocks";
+	import PageHeading from "../components/PageHeading.svelte";
+	import type {FeaturesCreated, SavedFunctionData, SelectedModel} from "../../types/ambient";
+	import type {RowData} from "../../types/table";
+	import ScratchDataset from "./components/ScratchDataset.svelte";
+	import UserDataset from "./components/UserDataset.svelte";
+	import AdditionalRows from "./components/AdditionalRows.svelte";
+	import FeatureFunctionsTable from "./components/FeatureFunctionsTable.svelte";
+	import ModelSummary from "./components/ModelSummary.svelte";
 
+	let functionData: SavedFunctionData ={};
 	let userFile: RowData[] = [];
 	let additionalRows: number = 0;
-	let functionData: Record<string, Array<{
-		functionName: string;
-		parameters: Array<Parameter>
-	}>> = {};
 	let newModel: boolean = false;
 	let selectedModel: SelectedModel | null = null;
 	let featuresCreated: FeaturesCreated[] = [];
@@ -51,134 +49,35 @@
 
 
 	function sendData() {
-		goto("/send")
+		goto(Endpoints.sendPage)
 	}
 </script>
 
-<div class="flex flex-col gap-6 w-3/4 mx-auto max-h-72">
-	<h1 class="text-3xl font-bold text-white justify-center flex">Review and Send Data</h1>
-	<!-- Features Created -->
-	{#if featuresCreated.length>0}
-	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">Features to create</h2>
-		<Table class="w-full text-gray-500 dark:text-gray-400" shadow>
-			<TableHead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-				{#each featuresCreated as feature}
-					<TableHeadCell>
-						{feature.feature}
-					</TableHeadCell>
-				{/each}
-			</TableHead>
-			<TableBody tableBodyClass="divide-y">
-				{#each featuresCreated as feature}
-					<TableBodyCell class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-						<TableBodyRow>
-							{feature.type}
-							<br>
-							{feature.category}
-						</TableBodyRow>
-					</TableBodyCell>
-				{/each}
-			</TableBody>
-		</Table>
-	</div>
+<Section>
+	<div class="flex flex-col gap-6">
+		<PageHeading text="Review and send the data" />
 
-	{:else}
-	<!-- User File Table -->
-	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">User File (First {maxRowsToShow} Rows)</h2>
-		<Table class="w-full text-gray-500 dark:text-gray-400" shadow>
-			<TableHead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-				{#each headers as header}
-					<TableHeadCell>
-						<span>{header}</span>
-					</TableHeadCell>
-				{/each}
-			</TableHead>
-			<TableBody tableBodyClass="divide-y">
-				{#each tableData.slice(0, maxRowsToShow) as row}
-					<TableBodyRow class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-						{#each headers as header}
-							<TableBodyCell>
-								{row[header]}
-							</TableBodyCell>
-						{/each}
-					</TableBodyRow>
-				{/each}
-			</TableBody>
-		</Table>
-	</div>
-	{/if}
-
-	<!-- Additional Rows -->
-	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">Additional Rows</h2>
-		<p class="text-center">{additionalRows}</p>
-	</div>
-
-	<!-- Selected Functions -->
-	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">Selected Functions</h2>
-
-		{#if Object.keys(functionData).length > 0}
-			<Table class="w-full text-gray-500 dark:text-gray-400" shadow>
-				<TableHead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-					<TableHeadCell>Feature</TableHeadCell>
-					<TableHeadCell>Function Name</TableHeadCell>
-					<TableHeadCell>Parameters</TableHeadCell>
-				</TableHead>
-				<TableBody tableBodyClass="divide-y">
-					{#each Object.entries(functionData) as [feature, functionParameter]}
-						{#each functionParameter as func, index}
-							<TableBodyRow class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-								{#if index === 0}
-									<TableBodyCell rowspan={functionParameter.length} class="font-semibold">{feature}</TableBodyCell>
-								{/if}
-								<TableBodyCell>{func.functionName}</TableBodyCell>
-								<TableBodyCell>
-									<ul class="list-disc pl-6">
-										{#each func.parameters as param}
-											<li>
-												<strong>{param.name}:</strong> {param.value}
-											</li>
-										{/each}
-									</ul>
-								</TableBodyCell>
-							</TableBodyRow>
-						{/each}
-					{/each}
-				</TableBody>
-			</Table>
+		{#if featuresCreated.length > 0}
+			<ScratchDataset featuresCreated={featuresCreated} />
 		{:else}
-			<p class="text-center text-gray-700 dark:text-gray-300">No Functions selected or data available.</p>
+			<UserDataset maxRowsToShow={maxRowsToShow}
+						 headers={headers}
+						 tableData={tableData}/>
 		{/if}
-	</div>
 
+		<AdditionalRows additionalRows={additionalRows} />
 
-	<!-- Selected Model -->
-	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">Selected Model</h2>
-		{#if selectedModel}
-			<p class="text-center">{selectedModel.name}
-			{#if (!newModel)}
-				Version {selectedModel.version}
-			{:else}
-				with name {newModelName}
-			{/if}
-			</p>
-		{/if}
-	</div>
+		<FeatureFunctionsTable functionData={functionData} />
 
-	<!-- New Model -->
-	<div class="bg-green-200 rounded-lg shadow-md p-6 dark:bg-gray-800">
-		<h2 class="text-center text-xl font-semibold mb-4">New Model</h2>
-		<p class="text-center">{newModel ? "Yes" : "No"}</p>
-	</div>
+		<ModelSummary	selectedModel={selectedModel}
+						newModel={newModel}
+						newModelName={newModelName}/>
 
-	<!-- Send Button -->
-	<div class="flex justify-end gap-4">
-		<BackButton/>
-		<CancelButton />
-		<Button color="blue" on:click={sendData}>Send</Button>
+		<!-- Actions -->
+		<div class="flex justify-end gap-4">
+			<BackButton />
+			<CancelButton />
+			<Button color="blue" on:click={sendData}>Send</Button>
+		</div>
 	</div>
-</div>
+</Section>

@@ -1,13 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import CancelButton from "../components/CancelButton.svelte";
-    import NextButton from "../components/NextButton.svelte";
-    import FunctionsTable from "../components/FunctionsTable.svelte";
-    import BackButton from "../components/BackButton.svelte";
-    import { Label, Input, InputAddon, ButtonGroup } from 'flowbite-svelte';
-    import { PlusOutline } from 'flowbite-svelte-icons';
+    import {Section} from "flowbite-svelte-blocks";
     import { goto } from "$app/navigation";
     import Error from "../components/Error.svelte";
+    import {Endpoints} from "$lib/config/uiEndpoints";
+    import Footer from "../components/Footer.svelte";
+    import PageHeading from "../components/PageHeading.svelte";
+    import type {FeatureFunction} from "../../types/ambient";
+    import FunctionsTable from "./components/FunctionsTable.svelte";
+    import NewRows from "./components/NewRows.svelte";
 
     let featuresName: string[] = [];
     let featureFunction: FeatureFunction = {};
@@ -33,48 +34,28 @@
         }
         sessionStorage.setItem('featureFunction', JSON.stringify(featureFunction));
         sessionStorage.setItem('additionalRows', additionalRows.toString());
-        goto("/parameters");
+        goto(Endpoints.parametersPage);
     }
 </script>
 
-{#if errorMessage}
-    <Error message={errorMessage}/>
-{/if}
+<Section>
+    {#if errorMessage}
+        <Error message={errorMessage}/>
+    {/if}
+    <PageHeading text="Function Selection"/>
 
-<h1 class="text-3xl font-bold text-white justify-center flex">Functions Selection</h1>
-<div class="items-center justify-center max-h-72 ">
     <form
             on:submit|preventDefault={submitFunctions}
-            class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
+            class="p-6 bg-white rounded-lg shadow-md"
     >
         {#if featuresName.length>0}
-        <FunctionsTable
-                featuresName={featuresName}
-                featureFunction={featureFunction}
-        />
+            <FunctionsTable
+                    featuresName={featuresName}
+                    featureFunction={featureFunction}
+            />
         {/if}
 
-        <div class="flex items-center justify-center bg-white">
-            <div class="p-18 bg-white rounded-lg ">
-                <Label for="additional_rows" class="block mb-2">Additional number of rows to create</Label>
-                <ButtonGroup>
-                    <InputAddon>
-                        <PlusOutline class="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    </InputAddon>
-                    <Input
-                            id="additional_rows"
-                            bind:value={additionalRows}
-                            placeholder="0"
-                            type="number"
-                            required
-                    />
-                </ButtonGroup>
-            </div>
-        </div>
-        <div class="flex justify-end gap-4">
-            <BackButton />
-            <CancelButton />
-            <NextButton />
-        </div>
+        <NewRows bind:additionalRows={additionalRows} />
+        <Footer/>
     </form>
-</div>
+</Section>
