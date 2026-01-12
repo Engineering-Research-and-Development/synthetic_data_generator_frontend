@@ -6,12 +6,9 @@
     import {Button} from "flowbite-svelte";
     import {get} from "svelte/store";
     import {Section} from "flowbite-svelte-blocks";
-    import type {
-        FeaturesCreated,
-        Parameter,
-        SelectedModel
-    } from "../../types/ambient";
+    import type {FeaturesCreated, Parameter, SelectedModel} from "../../types/ambient";
     import type {AIModel, OutFunction, OutParameter, SdgOut} from "../../types/middlewarePost";
+    import {Middleware} from "$lib/config/middleware";
 
     let userFile: Array<{number: Array<{string: number}>}> = [];
     let additionalRows: number = 0;
@@ -69,24 +66,28 @@
     });
 
     async function sendData() {
+        let userData = null;
+        if (userFile.length>0) {
+            userData = {input_type: "user_file", user_file: userFile}
+        }
+        else {
+            userData = {input_type: "features_created", features_created: featuresCreated}
+        }
         let postData: SdgOut = {
             additional_rows: additionalRows,
             ai_model: generateAiModel(newModel, newModelName, selectedModel.id, selectedModel.version),
+            data: userData
         };
         let outFunctions = generateOutFunctions(functionData)
         if (outFunctions.length>0) {
-            postData["functions"] = outFunctions
-        }
-        if (userFile.length>0) {
-            postData["user_file"]= userFile
-        }
-        if (featuresCreated.length>0) {
-            postData["features_created"] = featuresCreated
+            postData.functions = outFunctions
         }
 
+
         console.log(postData);
+        sessionStorage.clear();
         try {
-            const response = await fetch(get(BACKEND_URL) + "/sdg_input/", {
+            const response = await fetch(get(BACKEND_URL) + Middleware.sdg_input, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -98,9 +99,7 @@
             }
             const result = await response.json();
             doc_id = result.doc_id
-            console.log("Data sent successfully:", result);
             sending = false
-            sessionStorage.clear();
         } catch (error) {
             errorMessage="Error sending data:"+ error;
         }

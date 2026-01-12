@@ -15,10 +15,18 @@ export type AIModel = {
     new_model_name?: string;
     model_version?: string;
 }
+export type UserFile = {
+    input_type: string
+    user_file: { number: { string: number }[] }[];
+}
+export type Features = {
+    input_type: string;
+    features_created: FeaturesCreated[];
+}
+export type UserData = UserFile | Features;
 export type SdgOut = {
     additional_rows: number;
     functions?: OutFunction[];
     ai_model: AIModel;
-    user_file?: { number: { string: number }[] }[];
-    features_created?: FeaturesCreated[];
+    data: UserData;
 }

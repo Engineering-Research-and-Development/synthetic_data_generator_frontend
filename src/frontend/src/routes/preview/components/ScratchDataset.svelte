@@ -6,7 +6,7 @@
 
 <PreviewSection>
     <h2 class="text-xl font-semibold text-center mb-4">
-        Features to create
+        Dataset from scratch
     </h2>
 
     <Table striped hoverable>
@@ -17,14 +17,14 @@
         </TableHead>
 
         <TableBody>
-            {#each featuresCreated as feature}
                 <TableBodyRow>
-                    <TableBodyCell>
-                        <div class="font-medium">{feature.type}</div>
-                        <div class="text-sm text-gray-500">{feature.category}</div>
-                    </TableBodyCell>
+                    {#each featuresCreated as feature}
+                        <TableBodyCell>
+                            <div class="font-medium">{feature.type}</div>
+                            <div class="text-sm text-gray-500">{feature.category}</div>
+                        </TableBodyCell>
+                    {/each}
                 </TableBodyRow>
-            {/each}
         </TableBody>
     </Table>
 </PreviewSection>

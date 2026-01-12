@@ -17,6 +17,7 @@
     import type { SelectedModel } from '../../types/ambient';
     import type { Model, TrainedModel, Version } from '../../types/models';
     import type { NewAlgorithm } from '../../types/algorithms';
+    import {Middleware} from "$lib/config/middleware";
 
 
     let useNewModel = true;
@@ -51,7 +52,7 @@
     }
 
     async function loadAlgorithms(): Promise<NewAlgorithm[]> {
-        const response = await fetch(`${backendUrl}/algorithms/`);
+        const response = await fetch(`${backendUrl}${Middleware.algorithms}`);
         if (!response.ok) {
             errorMessage= "Failed to fetch algorithms!";
         }
@@ -65,7 +66,7 @@
     }
 
     async function fetchAlgorithm(id: number): Promise<NewAlgorithm> {
-        const response = await fetch(`${backendUrl}/algorithms/${id}`);
+        const response = await fetch(`${backendUrl}${Middleware.algorithms}${id}`);
         if (!response.ok) {
             errorMessage = "Failed to fetch the selected algorithm"
         }
@@ -92,7 +93,7 @@
     }
 
     async function loadTrainedModels(): Promise<TrainedModel[]> {
-        const response = await fetch(`${backendUrl}/trained_models/`);
+        const response = await fetch(`${backendUrl}${Middleware.trained_models}`);
         if (!response.ok) {
             errorMessage= "Failed to fetch trained_models"
         }
@@ -107,7 +108,7 @@
     }
 
     async function fetchTrainedModel(id: number): Promise<TrainedModel> {
-        const response = await fetch(`${backendUrl}/trained_models/${id}`);
+        const response = await fetch(`${backendUrl}${Middleware.trained_models}${id}`);
         if (!response.ok) {
             errorMessage = "Failed to fetch the selected trained model"
         }

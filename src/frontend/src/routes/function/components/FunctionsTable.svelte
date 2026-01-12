@@ -13,6 +13,7 @@
     import Error from "../../components/Error.svelte";
     import {get} from "svelte/store";
     import type {FeatureFunction, FunctionParameter} from "../../../types/ambient";
+    import {Middleware} from "$lib/config/middleware";
 
     export let featuresName: string[] = [];
     export let featureFunction: FeatureFunction = {};
@@ -22,7 +23,7 @@
 
     onMount(async () => {
         try {
-            const response = await fetch(get(BACKEND_URL) +'/functions/');
+            const response = await fetch(get(BACKEND_URL) + Middleware.functions);
             if (response.ok) {
                 const data = await response.json();
 

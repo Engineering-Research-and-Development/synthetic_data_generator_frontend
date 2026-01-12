@@ -23,6 +23,7 @@
 
     import type {FeatureFunction, SavedFunction, SavedFunctionData} from '../../types/ambient';
     import type { FunctionParameter } from '../../types/ambient';
+    import {Middleware} from "$lib/config/middleware";
 
 
     type FunctionDataByFeature = Record<string, FunctionParameter[]>;
@@ -63,7 +64,7 @@
 
         const results = await Promise.allSettled(
             ids.map(id =>
-                fetch(`${backendUrl}/functions/${id}`).then(res => {
+                fetch(`${backendUrl}${Middleware.functions}${id}`).then(res => {
                     if (!res.ok) {
                         errorMessage=`HTTP error! Status: ${res.status}`;
                     }
