@@ -9,14 +9,15 @@
 
 	let features: FeaturesCreated[] = [];
 	let types = [
-		{ value: 'String', name: 'String' },
-		{ value: 'Integer', name: 'Integer' },
-		{ value: 'Integer', name: 'Float' },
-		{ value: 'Double', name: 'Double' },
+		{ value: 'string', name: 'String' },
+		{ value: 'integer', name: 'Integer' },
+		{ value: 'double', name: 'Double' },
 	];
 	let subTypes = [
-		{ value: 'Continuous', name: "Continuous" },
-		{ value: 'Categorical', name: "Categorical" }
+		{ value: 'continuous', name: "Continuous" },
+		{ value: 'categorical', name: "Categorical" },
+		{ value: 'group_index', name: "GroupIndex" },
+		{ value: 'primary_key', name: "Primary Key" }
 	];
 
 	// Function to add a new feature row
