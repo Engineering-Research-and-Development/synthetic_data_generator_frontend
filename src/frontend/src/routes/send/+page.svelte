@@ -24,6 +24,8 @@
     let sending: boolean = true;
     let doc_id: string;
     let newModelName: string;
+
+
     function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[]  {
         let outFunctions: OutFunction[] = [];
 

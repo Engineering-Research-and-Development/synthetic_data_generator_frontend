@@ -2,22 +2,18 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import { get } from 'svelte/store';
-
     import { Section } from 'flowbite-svelte-blocks';
     import PageHeading from '../components/PageHeading.svelte';
-    import Footer from '../components/Footer.svelte';
+    import Footer from '../components/layout/Footer.svelte';
     import Error from '../components/Error.svelte';
-
     import ModelNew from './components/ModelNew.svelte';
     import ModelPreTrained from './components/ModelPreTrained.svelte';
-
     import { BACKEND_URL } from '../../stores/shared';
-    import { Endpoints } from '$lib/config/uiEndpoints';
-
     import type { SelectedModel } from '../../types/ambient';
     import type { Model, TrainedModel, Version } from '../../types/models';
     import type { NewAlgorithm } from '../../types/algorithms';
     import {Middleware} from "$lib/config/middleware";
+    import {getEndpointUrl} from "$lib/config/utils";
 
 
     let useNewModel = true;
@@ -136,7 +132,7 @@
         sessionStorage.setItem('selectedModel', JSON.stringify(selectedModel));
         sessionStorage.setItem('newModelName', JSON.stringify(newModelName));
 
-        goto(Endpoints.previewPage);
+        goto(getEndpointUrl("previewPage"));
     }
 </script>
 

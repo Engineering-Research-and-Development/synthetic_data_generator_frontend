@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Img } from 'flowbite-svelte';
+    import {Img} from 'flowbite-svelte';
     import HomeSection from "./components/HomeSection.svelte";
     import {Section} from "flowbite-svelte-blocks";
 </script>

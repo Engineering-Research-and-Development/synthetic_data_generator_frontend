@@ -3,13 +3,12 @@
 	import { goto } from "$app/navigation";
 	import FeaturesTable from "./components/FeaturesTable.svelte";
 	import Error from "../components/Error.svelte";
-	import Footer from "../components/Footer.svelte";
-	import {Endpoints} from "$lib/config/uiEndpoints";
+	import Footer from "../components/layout/Footer.svelte";
 	import {Section} from "flowbite-svelte-blocks";
 	import PageHeading from "../components/PageHeading.svelte";
 	import {Button} from "flowbite-svelte";
-
-	type RowData = { [key: string]: any };
+	import type {RowData} from "../../types/table";
+	import {getEndpointUrl} from "$lib/config/utils";
 
 	let tableData: RowData[] = [];
 	let headers: string[] = [];
@@ -43,7 +42,7 @@
 
 	function submitData(): void {
 		sessionStorage.setItem('selectedColumns', JSON.stringify(selectedColumns));
-		goto(Endpoints.functionPage);
+		goto(getEndpointUrl("functionPage"));
 	}
 </script>
 

@@ -13,17 +13,15 @@
     import { Section } from 'flowbite-svelte-blocks';
     import { goto } from '$app/navigation';
     import { get } from 'svelte/store';
-
     import { BACKEND_URL } from '../../stores/shared';
-    import { Endpoints } from '$lib/config/uiEndpoints';
-
     import PageHeading from '../components/PageHeading.svelte';
     import Error from '../components/Error.svelte';
-    import Footer from '../components/Footer.svelte';
+    import Footer from '../components/layout/Footer.svelte';
 
     import type {FeatureFunction, SavedFunction, SavedFunctionData} from '../../types/ambient';
     import type { FunctionParameter } from '../../types/ambient';
     import {Middleware} from "$lib/config/middleware";
+    import {getEndpointUrl} from "$lib/config/utils";
 
 
     type FunctionDataByFeature = Record<string, FunctionParameter[]>;
@@ -107,7 +105,7 @@
         const output = buildSavePayload(functionData);
 
         sessionStorage.setItem('functionData', JSON.stringify(output));
-        goto(Endpoints.modelPage);
+        goto(getEndpointUrl("modelPage"));
     }
 
     function buildSavePayload(

@@ -3,12 +3,12 @@
     import {Section} from "flowbite-svelte-blocks";
     import { goto } from "$app/navigation";
     import Error from "../components/Error.svelte";
-    import {Endpoints} from "$lib/config/uiEndpoints";
-    import Footer from "../components/Footer.svelte";
+    import Footer from "../components/layout/Footer.svelte";
     import PageHeading from "../components/PageHeading.svelte";
     import type {FeatureFunction} from "../../types/ambient";
     import FunctionsTable from "./components/FunctionsTable.svelte";
     import NewRows from "./components/NewRows.svelte";
+    import {getEndpointUrl} from "$lib/config/utils";
 
     let featuresName: string[] = [];
     let featureFunction: FeatureFunction = {};
@@ -34,7 +34,7 @@
         }
         sessionStorage.setItem('featureFunction', JSON.stringify(featureFunction));
         sessionStorage.setItem('additionalRows', additionalRows.toString());
-        goto(Endpoints.parametersPage);
+        goto(getEndpointUrl("parametersPage"));
     }
 </script>
 

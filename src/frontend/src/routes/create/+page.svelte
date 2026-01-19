@@ -3,7 +3,7 @@
 	import { Button, Select } from "flowbite-svelte";
 	import { CircleMinusSolid, CirclePlusSolid } from "flowbite-svelte-icons";
 	import { goto } from "$app/navigation";
-	import Footer from "../components/Footer.svelte";
+	import Footer from "../components/layout/Footer.svelte";
 	import PageHeading from "../components/PageHeading.svelte";
 	import type {FeaturesCreated} from "../../types/ambient";
 

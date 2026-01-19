@@ -4,7 +4,6 @@
 	import CancelButton from "../components/CancelButton.svelte";
 	import {onMount} from "svelte";
 	import {goto} from "$app/navigation";
-	import {Endpoints} from "$lib/config/uiEndpoints";
 	import {Section} from "flowbite-svelte-blocks";
 	import PageHeading from "../components/PageHeading.svelte";
 	import type {FeaturesCreated, SavedFunctionData, SelectedModel} from "../../types/ambient";
@@ -14,6 +13,7 @@
 	import AdditionalRows from "./components/AdditionalRows.svelte";
 	import FeatureFunctionsTable from "./components/FeatureFunctionsTable.svelte";
 	import ModelSummary from "./components/ModelSummary.svelte";
+	import {getEndpointUrl} from "$lib/config/utils";
 
 	let functionData: SavedFunctionData ={};
 	let userFile: RowData[] = [];
@@ -49,7 +49,7 @@
 
 
 	function sendData() {
-		goto(Endpoints.sendPage)
+		goto(getEndpointUrl("sendPage"))
 	}
 </script>
 
