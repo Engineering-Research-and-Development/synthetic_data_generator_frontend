@@ -21,7 +21,7 @@
 
     function updateFromPath(path: string) {
         if (!browser) return;
-        showSidebar = path !== '/' && path !== '/results';
+        showSidebar = EnhanceEndpoints.map(e => e.url).includes(path);
         const currentIndex = sections.findIndex(section =>
             section.endpoint === path
         );

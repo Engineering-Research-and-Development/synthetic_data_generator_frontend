@@ -19,13 +19,7 @@
     import {Middleware} from "$lib/config/middleware";
 
 
-    let {
-        trainedModels,
-        selectedModel
-    }: {
-        trainedModels: TrainedModel[];
-        selectedModel: SelectedModel;
-    } = $props();
+    let {selectedModel=$bindable(),trainedModels}: {selectedModel: SelectedModel, trainedModels: TrainedModel[]} = $props();
 
     let chosenModel: string = $state("");
     let selectedVersion: string= $state("");
@@ -76,22 +70,17 @@
         if (!models || !selectedVersion) {
             return;
         }
-
+        if (!models) {
+            return;
+        }
+        if (models.model.algorithm_name !== undefined) {
+            return;
+        }
         selectedModel = {
             id: models.model.id,
             name: models.model.name,
             version: selectedVersion
         };
-    });
-
-    $effect(() => {
-        if (!models) {
-            return;
-        }
-
-        if (models.model.algorithm_name !== undefined) {
-            return;
-        }
 
         fetchAlgorithmName(models);
     });

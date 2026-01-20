@@ -194,8 +194,8 @@
                     <p>Loading...</p>
                 {:else}
                     <ModelPreTrained
+                            bind:selectedModel
                             trainedModels={trainedModels}
-                            selectedModel={selectedModel}
                     />
                 {/if}
             </div>

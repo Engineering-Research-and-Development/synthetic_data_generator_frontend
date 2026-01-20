@@ -8,6 +8,7 @@
     import MetricsTable from "./components/MetricsTable.svelte";
 
     import type {CouchJson} from "../../types/couch";
+    import {Section} from "flowbite-svelte-blocks";
 
     let documentId: string;
     let documentData: CouchJson | null = null;
@@ -60,33 +61,34 @@
     <div class="text-red-500 mb-4">{error}</div>
 {/if}
 
-<div class="flex flex-col pt-32 h-72">
-    <h1 class="text-3xl font-bold text-white justify-center flex">Fetch the results document</h1>
-    <div class="mb-4">
-        <Input bind:value={documentId} placeholder="Enter Document ID" class="mb-2" />
-        <Button on:click={fetchDocument}>Fetch Document</Button>
-        <Button on:click={() => goto('/')}>SDG Home</Button>
+<Section>
+    <div class="flex flex-col justify-center space-x-4">
+        <h1 class="text-3xl font-bold text-white justify-center flex">Fetch the results document</h1>
+        <div class="mb-4">
+            <Input bind:value={documentId} placeholder="Enter Document ID" class="mb-2" />
+            <Button on:click={fetchDocument}>Fetch Document</Button>
+            <Button on:click={() => goto('/')}>SDG Home</Button>
+        </div>
+
+        {#if documentData}
+            <div>
+            <h2 class="text-xl font-bold mt-6 mb-4 text-white">Data preview</h2>
+                <div class="overflow-y-auto border border-gray-300 rounded bg-white">
+                <DataPreviewTable documentData={documentData} />
+                </div>
+            </div>
+
+            <div>
+            <h2 class="text-xl font-bold mt-6 mb-4 text-white">Metrics</h2>
+                <div class="overflow-y-auto border border-gray-300 rounded bg-white">
+                <MetricsTable documentData={documentData} />
+                </div>
+            </div>
+            <div class="flex justify-center mt-6">
+                <Button on:click={downloadJson} color="green">
+                    Download Full JSON Document
+                </Button>
+            </div>
+        {/if}
     </div>
-
-
-    {#if documentData}
-        <div>
-        <h2 class="text-xl font-bold mt-6 mb-4 text-white">Data preview</h2>
-            <div class="overflow-y-auto border border-gray-300 rounded bg-white">
-            <DataPreviewTable documentData={documentData} />
-            </div>
-        </div>
-
-        <div>
-        <h2 class="text-xl font-bold mt-6 mb-4 text-white">Metrics</h2>
-            <div class="overflow-y-auto border border-gray-300 rounded bg-white">
-            <MetricsTable documentData={documentData} />
-            </div>
-        </div>
-        <div class="flex justify-center mt-6">
-            <Button on:click={downloadJson} color="green">
-                Download Full JSON Document
-            </Button>
-        </div>
-    {/if}
-</div>
+</Section>

@@ -4,11 +4,11 @@
     import Error from "../components/Error.svelte";
     import {goto} from "$app/navigation";
     import {Button} from "flowbite-svelte";
-    import {get} from "svelte/store";
     import {Section} from "flowbite-svelte-blocks";
     import type {FeaturesCreated, Parameter, SelectedModel} from "../../types/ambient";
     import type {AIModel, OutFunction, OutParameter, SdgOut} from "../../types/middlewarePost";
     import {Middleware} from "$lib/config/middleware";
+    import {get} from "svelte/store";
 
     let userFile: Array<{number: Array<{string: number}>}> = [];
     let additionalRows: number = 0;
@@ -24,7 +24,7 @@
     let sending: boolean = true;
     let doc_id: string;
     let newModelName: string;
-
+    let backendUrl = get(BACKEND_URL);
 
     function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[]  {
         let outFunctions: OutFunction[] = [];
@@ -85,25 +85,25 @@
             postData.functions = outFunctions
         }
 
-
-        console.log(postData);
-        sessionStorage.clear();
         try {
-            const response = await fetch(get(BACKEND_URL) + Middleware.sdg_input, {
+            let response = await fetch((`${backendUrl}${Middleware.sdg_input}`), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(postData),
             });
+            sessionStorage.clear();
             if (!response.ok) {
                 errorMessage="An error occurred";
             }
-            const result = await response.json();
+            let result = await response.json();
             doc_id = result.doc_id
-            sending = false
         } catch (error) {
             errorMessage="Error sending data:"+ error;
+        }
+        finally {
+            sending = false
         }
     }
 </script>
