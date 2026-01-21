@@ -3,11 +3,13 @@
     import { goto } from "$app/navigation";
     import { csvParse } from "d3";
     import {getEndpointUrl} from "$lib/config/utils";
+    import Error from "./Error.svelte";
 
-    let {uploadPopup=$bindable()} = $props();
+    let uploadPopup: boolean = $state(false);
     let uploadedFile: File | null=$state(null);
     let showSpinner: boolean = $state(false);
     let isSubmitting:boolean = $state(false);
+    let errorMessage: string | null = $state(null)
 
     function onFileSelected(event: Event): void {
         isSubmitting = true;
@@ -16,7 +18,7 @@
         if (!file) return;
 
         if (file.size > 10 * 1024 * 1024) {
-            alert("File size exceeds 10 MB.");
+            errorMessage="File size exceeds 10 MB.";
             return;
         }
         uploadedFile = file;
@@ -39,7 +41,7 @@
 
     async function uploadAndParse(): Promise<void> {
         if (!uploadedFile) {
-            alert("No file selected.");
+            errorMessage="No file selected.";
             return;
         }
         uploadPopup = false;
@@ -55,8 +57,8 @@
             reader.onload = () => {
                 try {
                     if (!reader.result) {
-                        throw new Error("Empty file");
-
+                        errorMessage = "The file is empty"
+                        return
                     }
 
                     const content = reader.result.toString();
@@ -73,8 +75,7 @@
                     uploadPopup = false;
                     goto(getEndpointUrl("featureTypes"));
                 } catch (err) {
-                    console.error(err);
-                    alert("Parsing failed. Check file format.");
+                    errorMessage="Parsing failed. Check file format"
                 } finally {
                     isSubmitting = false;
                     showSpinner = false;
@@ -84,10 +85,14 @@
             reader.readAsText(uploadedFile);
         } catch (error) {
             isSubmitting = false;
-            alert("Unexpected error during upload.");
+            errorMessage="Unexpected error during upload.";
         }
     }
 </script>
+
+{#if errorMessage}
+    <Error bind:errorMessage/>
+{/if}
 
 <div class="flex justify-center space-x-4">
     <Button
@@ -111,22 +116,23 @@
                 class="w-full"
         />
 
-        <Button onclick={resetState}>Cancel</Button>
+        <Button onclick={resetState}   class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">Cancel</Button>
         <Button
                 onclick={uploadAndParse}
                 disabled={!uploadedFile || !isSubmitting}
+                class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition"
         >
             Upload
         </Button>
     </Modal>
     <Button
             href={getEndpointUrl("create")}
-            class="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition">
+            class="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition">
         Create a dataset from scratch
     </Button>
     <Button
             href={getEndpointUrl("resultPage")}
-            class="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition">
+            class="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition">
         Check the results
     </Button>
 </div>

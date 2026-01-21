@@ -3,7 +3,7 @@
     import { goto } from '$app/navigation';
     import { get } from 'svelte/store';
     import { Section } from 'flowbite-svelte-blocks';
-    import PageHeading from '../components/PageHeading.svelte';
+    import PageHeading from '../components/layout/PageHeading.svelte';
     import Footer from '../components/layout/Footer.svelte';
     import Error from '../components/Error.svelte';
     import ModelNew from './components/ModelNew.svelte';
@@ -38,10 +38,8 @@
         try {
             algorithms = await loadAlgorithms();
             trainedModels = await loadTrainedModels();
-        } catch (error) {
-            errorMessage = error instanceof Error
-                ? error.message
-                : 'Unexpected error';
+        } catch (error: any) {
+            errorMessage = error.message;
         } finally {
             isLoading = false;
         }
@@ -137,11 +135,10 @@
 </script>
 
 <Section>
-    {#if errorMessage}
-        <Error message={errorMessage} />
-    {/if}
-
     <PageHeading text="AI Model Selection" />
+    {#if errorMessage}
+        <Error bind:errorMessage/>
+    {/if}
 
     <form
             on:submit|preventDefault={submit}

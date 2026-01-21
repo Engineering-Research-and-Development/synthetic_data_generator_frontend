@@ -4,7 +4,7 @@
     import { goto } from "$app/navigation";
     import Error from "../components/Error.svelte";
     import Footer from "../components/layout/Footer.svelte";
-    import PageHeading from "../components/PageHeading.svelte";
+    import PageHeading from "../components/layout/PageHeading.svelte";
     import type {FeatureFunction} from "../../types/ambient";
     import FunctionsTable from "./components/FunctionsTable.svelte";
     import NewRows from "./components/NewRows.svelte";
@@ -39,10 +39,10 @@
 </script>
 
 <Section>
-    {#if errorMessage}
-        <Error message={errorMessage}/>
-    {/if}
     <PageHeading text="Function Selection"/>
+    {#if errorMessage}
+        <Error bind:errorMessage/>
+    {/if}
 
     <form
             on:submit|preventDefault={submitFunctions}

@@ -14,7 +14,7 @@
     import { goto } from '$app/navigation';
     import { get } from 'svelte/store';
     import { BACKEND_URL } from '../../stores/shared';
-    import PageHeading from '../components/PageHeading.svelte';
+    import PageHeading from '../components/layout/PageHeading.svelte';
     import Error from '../components/Error.svelte';
     import Footer from '../components/layout/Footer.svelte';
 
@@ -133,11 +133,10 @@
 </script>
 
 <Section>
-    {#if errorMessage}
-        <Error message={errorMessage} />
-    {/if}
-
     <PageHeading text="Function composition" />
+    {#if errorMessage}
+        <Error bind:errorMessage/>
+    {/if}
 
     <form
             on:submit|preventDefault={save}

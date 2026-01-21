@@ -5,7 +5,7 @@
 	import Error from "../components/Error.svelte";
 	import Footer from "../components/layout/Footer.svelte";
 	import {Section} from "flowbite-svelte-blocks";
-	import PageHeading from "../components/PageHeading.svelte";
+	import PageHeading from "../components/layout/PageHeading.svelte";
 	import {Button} from "flowbite-svelte";
 	import type {RowData} from "../../types/table";
 	import {getEndpointUrl} from "$lib/config/utils";
@@ -47,10 +47,10 @@
 </script>
 
 <Section>
-	{#if errorMessage}
-		<Error message={errorMessage}/>
-	{/if}
 	<PageHeading text="Feature Selection"/>
+	{#if errorMessage}
+		<Error bind:errorMessage/>
+	{/if}
 
 	<div>
 		<form on:submit|preventDefault={submitData}>

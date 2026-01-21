@@ -20,11 +20,13 @@
     let newModel: boolean = false;
     let selectedModel: SelectedModel;
     let featuresCreated: FeaturesCreated[] = [];
-    let errorMessage: string;
-    let sending: boolean = true;
-    let doc_id: string;
+    let doc_id: string = $state("");
     let newModelName: string;
     let backendUrl = get(BACKEND_URL);
+    type Status = "idle" | "sending" | "success" | "error";
+
+    let status = $state<Status>("idle");
+    let errorMessage = $state("");
 
     function generateOutFunctions(featureFunctions: Record<string, { functionName: string; functionId: number,parameters: Parameter[] }[]>): OutFunction[]  {
         let outFunctions: OutFunction[] = [];
@@ -69,6 +71,7 @@
 
     async function sendData() {
         let userData = null;
+        status = "sending";
         if (userFile.length>0) {
             userData = {input_type: "user_file", user_file: userFile}
         }
@@ -86,35 +89,41 @@
         }
 
         try {
-            let response = await fetch((`${backendUrl}${Middleware.sdg_input}`), {
+            const response = await fetch(`${backendUrl}${Middleware.sdg_input}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(postData),
             });
-            sessionStorage.clear();
+
+            //sessionStorage.clear();
+
             if (!response.ok) {
-                errorMessage="An error occurred";
+                const contentType = response.headers.get("content-type");
+                if (contentType?.includes("application/json")) {
+                    const errorBody = await response.json();
+                    errorMessage = errorBody.message ?? JSON.stringify(errorBody);
+                } else {
+                    errorMessage = await response.text();
+                    status= "error";
+                }
+                return;
             }
-            let result = await response.json();
-            doc_id = result.doc_id
-        } catch (error) {
-            errorMessage="Error sending data:"+ error;
-        }
-        finally {
-            sending = false
+            const result = await response.json();
+            doc_id = result.doc_id;
+            status= "success";
+
+        } catch (error: any) {
+            errorMessage = error.message;
+            status= "error";
         }
     }
 </script>
 
 <Section>
-    {#if errorMessage}
-        <Error message={errorMessage}/>
-    {/if}
-
     <div class="flex flex-col gap-6 w-3/4 mx-auto">
-        {#if sending}
+        {#if status === "sending"}
             <h1 class="text-3xl font-bold text-white justify-center flex">
                 Sending data...
             </h1>
@@ -122,8 +131,7 @@
                 Please wait, this may take a few moments.
             </p>
 
-        {:else}
-
+        {:else if status === "success"}
             <h1 class="text-3xl font-bold text-white justify-center flex">
                 Data sent successfully!
             </h1>
@@ -132,12 +140,20 @@
                 using the following ID:
                 <span class="text-blue-600">{doc_id}</span>
             </h2>
-            <Button
-                class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                on:click={() => goto('/')}
-            >
-                SDG Home
-            </Button>
+        {:else if status === "error"}
+            <Error bind:errorMessage/>
+            <h1 class="text-3xl font-serif font-semibold tracking-wide text-[#e6e1d5] justify-center flex
+         drop-shadow-[0_0_6px_rgba(120,30,30,0.4)]">
+                The attempt has failed. Rise once more, and try again.
+            </h1>
+
         {/if}
+
+        <Button
+            class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            on:click={() => goto('/')}
+        >
+            SDG Home
+        </Button>
     </div>
 </Section>

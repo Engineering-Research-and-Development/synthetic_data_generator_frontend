@@ -13,10 +13,11 @@
         TableBodyRow,
         TableBodyCell, Fileupload
     } from "flowbite-svelte";
-    import PageHeading from "../components/PageHeading.svelte";
+    import PageHeading from "../components/layout/PageHeading.svelte";
     import Footer from "../components/layout/Footer.svelte";
     import { Modal } from "flowbite-svelte";
     import {getEndpointUrl} from "$lib/config/utils";
+    import Error from "../components/Error.svelte";
 
     let showLoadModal = false;
     let selectedFile: File | null = null;
@@ -147,10 +148,10 @@
 </script>
 
 <Section>
-    <PageHeading text="Feature types" />
+    <PageHeading text="Feature types"/>
 
     {#if errorMessage}
-        <p class="text-red-600">{errorMessage}</p>
+        <Error bind:errorMessage/>
     {:else}
         <form on:submit|preventDefault={submit}>
             <div class="flex gap-6">

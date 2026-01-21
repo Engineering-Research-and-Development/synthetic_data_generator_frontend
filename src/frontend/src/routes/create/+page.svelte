@@ -4,7 +4,7 @@
 	import { CircleMinusSolid, CirclePlusSolid } from "flowbite-svelte-icons";
 	import { goto } from "$app/navigation";
 	import Footer from "../components/layout/Footer.svelte";
-	import PageHeading from "../components/PageHeading.svelte";
+	import PageHeading from "../components/layout/PageHeading.svelte";
 	import type {FeaturesCreated} from "../../types/ambient";
 
 	let features: FeaturesCreated[] = [];
@@ -48,12 +48,14 @@
 
 <Section>
 	<PageHeading text="Dataset Creation from scratch"/>
+
 	<form on:submit={submit}>
 		<Section name="tableheader" sectionClass="bg-gray-50 dark:bg-gray-900 flex flex-col items-center pt-8">
 			<!-- Centered "Add Feature" Button -->
 			<div class="w-full flex justify-center mb-4">
-				<Button type="button" on:click={addFeature} class="flex items-center">
-					<CirclePlusSolid class="h-5 w-5" />
+				<Button type="button" on:click={addFeature} class="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition">
+
+				<CirclePlusSolid class="h-5 w-5" />
 					Add feature
 				</Button>
 			</div>

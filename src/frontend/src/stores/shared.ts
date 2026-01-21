@@ -1,4 +1,7 @@
-import { writable } from "svelte/store";
+import { readable } from "svelte/store";
+import { loadPublicConfig } from "$lib/config/public";
 
-export const BACKEND_URL = writable<string>("http://127.0.0.1:8001");
-export const COUCH_URL = writable<string>("http://127.0.0.1:5984");
+const config = loadPublicConfig();
+
+export const BACKEND_URL = readable(config.backendUrl);
+export const COUCH_URL = readable(config.couchUrl);

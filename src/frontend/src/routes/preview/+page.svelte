@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
-	import BackButton from "../components/BackButton.svelte";
-	import CancelButton from "../components/CancelButton.svelte";
+	import BackButton from "../components/layout/BackButton.svelte";
+	import CancelButton from "../components/layout/CancelButton.svelte";
 	import {onMount} from "svelte";
 	import {goto} from "$app/navigation";
 	import {Section} from "flowbite-svelte-blocks";
-	import PageHeading from "../components/PageHeading.svelte";
+	import PageHeading from "../components/layout/PageHeading.svelte";
 	import type {FeaturesCreated, SavedFunctionData, SelectedModel} from "../../types/ambient";
 	import type {RowData} from "../../types/table";
 	import ScratchDataset from "./components/ScratchDataset.svelte";
@@ -30,7 +30,7 @@
 		try {
 			const userFileData = sessionStorage.getItem("userFile");
 			userFile = userFileData ? JSON.parse(userFileData) : [];
-			headers = Object.keys(userFile[0]); // Extract headers from the first row
+			headers = Object.keys(userFile[0]);
 			tableData = userFile
 		} catch (error) {
 			userFile = [];

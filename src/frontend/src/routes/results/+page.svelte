@@ -12,13 +12,12 @@
 
     let documentId: string;
     let documentData: CouchJson | null = null;
-    let error: string | null = null;
     let errorMessage: string;
 
     async function fetchDocument() {
         errorMessage = "";
         if (!documentId) {
-            error = 'Please enter a document ID';
+            errorMessage = 'Please enter a document ID';
             return;
         }
 
@@ -33,9 +32,9 @@
                 errorMessage="Document not found"
             }
             documentData = await response.json();
-            error = null;
-        } catch (err) {
+        } catch (err: any) {
             documentData = null;
+            errorMessage = err.message;
         }
     }
 
@@ -54,21 +53,37 @@
     }
 </script>
 
-{#if errorMessage}
-    <Error message={errorMessage}/>
-{/if}
-{#if error}
-    <div class="text-red-500 mb-4">{error}</div>
-{/if}
-
 <Section>
+    {#if errorMessage}
+        <Error bind:errorMessage/>
+    {/if}
+
     <div class="flex flex-col justify-center space-x-4">
-        <h1 class="text-3xl font-bold text-white justify-center flex">Fetch the results document</h1>
-        <div class="mb-4">
-            <Input bind:value={documentId} placeholder="Enter Document ID" class="mb-2" />
-            <Button on:click={fetchDocument}>Fetch Document</Button>
-            <Button on:click={() => goto('/')}>SDG Home</Button>
-        </div>
+        <section class="flex flex-col items-center justify-center h-1/2 gap-6 px-4">
+            <h1 class="text-4xl sm:text-5xl font-bold text-white text-center drop-shadow-md">
+                Fetch the Results Document
+            </h1>
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-lg">
+                <Input
+                        bind:value={documentId}
+                        placeholder="Enter Document ID"
+                        class="flex-1 px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <Button
+                        class="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-md shadow-md transition-colors duration-200"
+                        on:click={fetchDocument}
+                >
+                    Fetch Document
+                </Button>
+
+                <Button
+                        class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-md shadow-md transition-colors duration-200"
+                        on:click={() => goto('/')}
+                >
+                    Back
+                </Button>
+            </div>
+        </section>
 
         {#if documentData}
             <div>
