@@ -18,10 +18,11 @@
     import { Modal } from "flowbite-svelte";
     import {getEndpointUrl} from "$lib/config/utils";
     import Error from "../components/Error.svelte";
+    import type {FeatureConfig} from "../../types/middlewarePost";
 
     let showLoadModal = false;
     let selectedFile: File | null = null;
-
+    let automaticInfer: boolean = true;
 
     /* --------- Domain types --------- */
     type FeatureType = "continuous" | "categorical" | "group_index";
@@ -31,11 +32,6 @@
         type: FeatureType;
         primaryKey: boolean;
     }
-
-    type FeatureConfig = Record<
-        string,
-        { type: FeatureType; primaryKey: boolean }
-    >;
 
     /* --------- State --------- */
     let featureType: FeatureRow[] = [];
@@ -78,7 +74,15 @@
     }
 
     function submit(): void {
-        sessionStorage.setItem("featureTypes", JSON.stringify(featureType));
+        if (!automaticInfer) {
+            const payload: FeatureConfig = Object.fromEntries(
+                featureType.map((f) => [
+                    f.name,
+                    { type: f.type, primaryKey: f.primaryKey }
+                ])
+            );
+            sessionStorage.setItem("featureTypes", JSON.stringify(payload));
+        }
         goto(getEndpointUrl("feature"));
     }
 
@@ -141,7 +145,6 @@
 
         reader.readAsText(selectedFile);
     }
-
     function onFileSelected(event: Event): void {
         selectedFile = (event.target as HTMLInputElement).files?.[0] ?? null;
     }
@@ -153,10 +156,18 @@
     {#if errorMessage}
         <Error bind:errorMessage/>
     {:else}
+
         <form on:submit|preventDefault={submit}>
             <div class="flex gap-6">
                 <div class="flex-1">
-                    <Table>
+                    <Table class={`border rounded-lg cursor-pointer transition ${automaticInfer
+                        ? 'bg-gray-300 opacity-50'
+                        : 'bg-white'
+                    }`}
+                           role="button"
+                           onclick={() => (automaticInfer = false)}
+                    >
+
                         <TableHead>
                             <TableHeadCell>Feature Name</TableHeadCell>
                             <TableHeadCell>Feature Type</TableHeadCell>
@@ -190,7 +201,7 @@
                 </div>
 
                 <div class="flex flex-col gap-3 justify-start">
-                    <Button type="button" color="light" on:click={saveAsJson}>
+                    <Button type="button" color="light" onclick={saveAsJson}>
                         Save Configuration
                     </Button>
 
@@ -201,10 +212,20 @@
                                 class="hidden"
                                 on:change={loadFromJson}
                         />
-                        <Button type="button" color="light" on:click={() => (showLoadModal = true)}>
+                        <Button type="button" color="light" onclick={() => (showLoadModal = true)}>
                             Load Configuration
                         </Button>
                     </label>
+                    <Button
+                            class={`transition ${
+                                automaticInfer
+                                  ? 'bg-green-600 hover:bg-green-700'
+                                  : 'bg-gray-600 hover:bg-gray-700 opacity-50'
+                              }`}
+                            onclick={() => (automaticInfer = true)}
+                    >
+                        Automatic Infer
+                    </Button>
                 </div>
             </div>
 

@@ -6,7 +6,7 @@
     import {Button} from "flowbite-svelte";
     import {Section} from "flowbite-svelte-blocks";
     import type {FeaturesCreated, Parameter, SelectedModel} from "../../types/ambient";
-    import type {AIModel, OutFunction, OutParameter, SdgOut} from "../../types/middlewarePost";
+    import type {AIModel, FeatureConfig, OutFunction, OutParameter, SdgOut} from "../../types/middlewarePost";
     import {Middleware} from "$lib/config/middleware";
     import {get} from "svelte/store";
 
@@ -17,6 +17,7 @@
         functionName: string;
         parameters: Array<Parameter>
     }>> = {};
+    let featureTypes: FeatureConfig;
     let newModel: boolean = false;
     let selectedModel: SelectedModel;
     let featuresCreated: FeaturesCreated[] = [];
@@ -66,6 +67,7 @@
         userFile = JSON.parse(sessionStorage.getItem("userFile") || "{}");
         featuresCreated = JSON.parse(sessionStorage.getItem("featuresCreated") || "[]");
         newModelName = JSON.parse(sessionStorage.getItem("newModelName") || "");
+        featureTypes = JSON.parse(sessionStorage.getItem("featureTypes") || "[]");
         await sendData()
     });
 
@@ -87,6 +89,9 @@
         if (outFunctions.length>0) {
             postData.functions = outFunctions
         }
+        if (Object.keys(featureTypes).length > 0) {
+            postData.feature_types = featureTypes;
+        }
 
         try {
             const response = await fetch(`${backendUrl}${Middleware.sdg_input}`, {
@@ -96,9 +101,7 @@
                 },
                 body: JSON.stringify(postData),
             });
-
-            //sessionStorage.clear();
-
+            sessionStorage.clear();
             if (!response.ok) {
                 const contentType = response.headers.get("content-type");
                 if (contentType?.includes("application/json")) {

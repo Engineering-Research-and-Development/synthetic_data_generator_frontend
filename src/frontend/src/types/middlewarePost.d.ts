@@ -19,6 +19,11 @@ export type UserFile = {
     input_type: string
     user_file: { number: { string: number }[] }[];
 }
+export type FeatureConfig = Record<
+    string,
+    { type: FeatureType; primaryKey: boolean }
+>;
+
 export type Features = {
     input_type: string;
     features_created: FeaturesCreated[];
@@ -29,4 +34,5 @@ export type SdgOut = {
     functions?: OutFunction[];
     ai_model: AIModel;
     data: UserData;
+    feature_types?: FeatureConfig;
 }

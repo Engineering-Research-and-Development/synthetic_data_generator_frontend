@@ -14,6 +14,8 @@
 	import FeatureFunctionsTable from "./components/FeatureFunctionsTable.svelte";
 	import ModelSummary from "./components/ModelSummary.svelte";
 	import {getEndpointUrl} from "$lib/config/utils";
+	import type {FeatureConfig} from "../../types/middlewarePost";
+	import FeatureType from "./components/FeatureType.svelte";
 
 	let functionData: SavedFunctionData ={};
 	let userFile: RowData[] = [];
@@ -24,6 +26,7 @@
 	let headers: string[] = [];
 	let tableData: RowData[] = [];
 	let maxRowsToShow = 4;
+	let featureTypes: FeatureConfig = {} as FeatureConfig;
 	let newModelName: string;
 
 	async function loadUserFile(): Promise<void> {
@@ -45,6 +48,7 @@
 		selectedModel = JSON.parse(sessionStorage.getItem("selectedModel") || "");
 		featuresCreated = JSON.parse(sessionStorage.getItem("featuresCreated") || "[]");
 		newModelName = JSON.parse(sessionStorage.getItem("newModelName") || "");
+		featureTypes = JSON.parse(sessionStorage.getItem("featureTypes") || "[]");
 	});
 
 
@@ -64,11 +68,9 @@
 						 headers={headers}
 						 tableData={tableData}/>
 		{/if}
-
+		<FeatureType featureTypes={featureTypes}/>
 		<AdditionalRows additionalRows={additionalRows} />
-
 		<FeatureFunctionsTable functionData={functionData} />
-
 		<ModelSummary	selectedModel={selectedModel}
 						newModel={newModel}
 						newModelName={newModelName}/>
