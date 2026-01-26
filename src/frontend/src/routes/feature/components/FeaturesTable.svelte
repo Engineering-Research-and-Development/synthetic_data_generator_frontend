@@ -53,10 +53,13 @@
             <TableHeadCell>
                 <div class="justify-center flex space-x-2">
                     <Checkbox
+                            class=" font-semibold rounded shadow-md transition"
+                            color="blue"
                             checked={selectedColumns.includes(header)}
                             on:change={() => toggleColumn(header)}
-                    />
+                            >
                     <span>{header}</span>
+                    </Checkbox>
                 </div>
             </TableHeadCell>
         {/each}

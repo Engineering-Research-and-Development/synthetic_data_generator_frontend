@@ -27,3 +27,12 @@ export const EnhanceEndpoints: Endpoint[] = [
 ]
     .map(id => Endpoints.find(endpoint => endpoint.id === id))
     .filter((endpoint): endpoint is Endpoint => endpoint !== undefined);
+
+export const CreateEndpoints: Endpoint[] = [
+    "create",
+    "functionPage",
+    "parametersPage",
+    "previewPage"
+]
+    .map(id => Endpoints.find(endpoint => endpoint.id === id))
+    .filter((endpoint): endpoint is Endpoint => endpoint !== undefined);

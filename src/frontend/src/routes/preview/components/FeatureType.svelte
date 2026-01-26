@@ -24,7 +24,6 @@
                     {#each featureKeys as feature}
                         <TableBodyCell>
                             Type: {featureTypes[feature].type}<br>
-                            Primary Key: {featureTypes[feature].primaryKey ? "Yes" : "No"}
                         </TableBodyCell>
                     {/each}
                 </TableBodyRow>

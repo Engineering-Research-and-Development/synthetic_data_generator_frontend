@@ -9,6 +9,7 @@
 	import {Button} from "flowbite-svelte";
 	import type {RowData} from "../../types/table";
 	import {getEndpointUrl} from "$lib/config/utils";
+	import {navState} from "$lib/config/navigation.svelte";
 
 	let tableData: RowData[] = [];
 	let headers: string[] = [];
@@ -42,7 +43,7 @@
 
 	function submitData(): void {
 		sessionStorage.setItem('selectedColumns', JSON.stringify(selectedColumns));
-		goto(getEndpointUrl("functionPage"));
+		goto(navState.getNextLink(getEndpointUrl("feature"))!);
 	}
 </script>
 
@@ -54,7 +55,8 @@
 
 	<div>
 		<form on:submit|preventDefault={submitData}>
-			<Button class="" on:click={() => toggleAllColumn()}>Select All Features</Button>
+			<Button class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
+					on:click={() => toggleAllColumn()}>Select All Features</Button>
 			<FeaturesTable
 					tableHeader={headers}
 					tableData={tableData}

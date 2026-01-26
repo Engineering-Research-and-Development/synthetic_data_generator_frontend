@@ -9,7 +9,7 @@ export type Parameter = {
     id: number;
     name: string;
     value: string;
-    parameter_type: "float" | "int";
+    parameter_type: "float" | "int" | "bool" | "string";
 };
 
 export type FunctionParameter = {
@@ -18,8 +18,9 @@ export type FunctionParameter = {
 };
 
 export type FeatureFunction = {
-    [feature: string]: string[]
-};
+    featureName: string;
+    functionId: number[];
+}
 
 export type FeaturesCreated = {
     id: number,
@@ -33,18 +34,3 @@ export type SelectedModel = {
     name: string;
     version?: string;
 };
-
-
-
-type SavedFunctionParameter = {
-    id: number;
-    value: Parameter['value'];
-};
-
-type SavedFunction = {
-    functionId: number;
-    functionName: string;
-    parameters: SavedFunctionParameter[];
-};
-
-type SavedFunctionData = Record<string, SavedFunction[]>;

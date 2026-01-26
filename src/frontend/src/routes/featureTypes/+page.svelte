@@ -1,50 +1,44 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { goto } from "$app/navigation";
-    import { Section } from "flowbite-svelte-blocks";
+    import {onMount} from "svelte";
+    import {goto} from "$app/navigation";
+    import {Section} from "flowbite-svelte-blocks";
     import {
-        Table,
-        Select,
-        Checkbox,
         Button,
+        Fileupload,
+        Modal,
+        Select,
+        Table,
+        TableBody,
+        TableBodyCell,
+        TableBodyRow,
         TableHead,
         TableHeadCell,
-        TableBody,
-        TableBodyRow,
-        TableBodyCell, Fileupload
+        Toggle
     } from "flowbite-svelte";
     import PageHeading from "../components/layout/PageHeading.svelte";
     import Footer from "../components/layout/Footer.svelte";
-    import { Modal } from "flowbite-svelte";
     import {getEndpointUrl} from "$lib/config/utils";
     import Error from "../components/Error.svelte";
     import type {FeatureConfig} from "../../types/middlewarePost";
-
+    import {type FeatureType, featureTypes} from "../../types/features";
+    import { navState } from "$lib/config/navigation.svelte.js"
     let showLoadModal = false;
     let selectedFile: File | null = null;
     let automaticInfer: boolean = true;
 
     /* --------- Domain types --------- */
-    type FeatureType = "continuous" | "categorical" | "group_index";
-
     interface FeatureRow {
         name: string;
         type: FeatureType;
-        primaryKey: boolean;
     }
 
     /* --------- State --------- */
     let featureType: FeatureRow[] = [];
     let errorMessage: string | null = null;
 
-    const featureTypes = [
-        { value: "continuous", name: "Continuous" },
-        { value: "categorical", name: "Categorical" },
-        { value: "group_index", name: "Group index" }
-    ];
-
     /* --------- Init --------- */
     onMount(() => {
+        navState.mode="enhanced";
         const savedData = sessionStorage.getItem("userFile");
         if (!savedData) {
             errorMessage = "No file loaded";
@@ -66,24 +60,17 @@
     });
 
     /* --------- Behaviour --------- */
-    function setPrimaryKey(index: number): void {
-        featureType = featureType.map((f, i) => ({
-            ...f,
-            primaryKey: i === index ? !f.primaryKey : false
-        }));
-    }
-
     function submit(): void {
         if (!automaticInfer) {
             const payload: FeatureConfig = Object.fromEntries(
                 featureType.map((f) => [
                     f.name,
-                    { type: f.type, primaryKey: f.primaryKey }
+                    { type: f.type}
                 ])
             );
             sessionStorage.setItem("featureTypes", JSON.stringify(payload));
         }
-        goto(getEndpointUrl("feature"));
+        goto(navState.getNextLink(getEndpointUrl("featureTypes"))!);
     }
 
     /* --------- Serialization (ISP) --------- */
@@ -91,7 +78,7 @@
         const payload: FeatureConfig = Object.fromEntries(
             featureType.map((f) => [
                 f.name,
-                { type: f.type, primaryKey: f.primaryKey }
+                { type: f.type}
             ])
         );
 
@@ -171,11 +158,10 @@
                         <TableHead>
                             <TableHeadCell>Feature Name</TableHeadCell>
                             <TableHeadCell>Feature Type</TableHeadCell>
-                            <TableHeadCell>Primary Key</TableHeadCell>
                         </TableHead>
 
                         <TableBody>
-                            {#each featureType as feature, index}
+                            {#each featureType as feature}
                                 <TableBodyRow>
                                     <TableBodyCell class="font-mono">
                                         {feature.name}
@@ -188,12 +174,6 @@
                                         />
                                     </TableBodyCell>
 
-                                    <TableBodyCell class="text-center">
-                                        <Checkbox
-                                                checked={feature.primaryKey}
-                                                on:change={() => setPrimaryKey(index)}
-                                        />
-                                    </TableBodyCell>
                                 </TableBodyRow>
                             {/each}
                         </TableBody>
@@ -216,16 +196,17 @@
                             Load Configuration
                         </Button>
                     </label>
-                    <Button
-                            class={`transition ${
+                    <Toggle
+                            class={`transition rounded-[2.5rem] ${
                                 automaticInfer
-                                  ? 'bg-green-600 hover:bg-green-700'
-                                  : 'bg-gray-600 hover:bg-gray-700 opacity-50'
+                                  ? 'bg-white'
+                                  : 'bg-gray-500 opacity-50'
                               }`}
-                            onclick={() => (automaticInfer = true)}
+                            color="green"
+                            bind:checked={automaticInfer}
                     >
                         Automatic Infer
-                    </Button>
+                    </Toggle>
                 </div>
             </div>
 

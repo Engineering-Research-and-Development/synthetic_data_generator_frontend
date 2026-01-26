@@ -11,7 +11,7 @@
 
 <NavBar/>
 <div class="min-h-screen flex flex-col items-center justify-center pt-20 relative" style="background-image: url('Dark-Purple-Backgrounds.png');">
-    <div class="absolute left-4" style="top: 5.5rem;">
+    <div class="absolute left-4" style="top: 4.5rem;">
         <BreadCrumbs />
     </div>
 

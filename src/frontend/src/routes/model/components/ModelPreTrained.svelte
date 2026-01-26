@@ -16,7 +16,7 @@
     import Error from '../../components/Error.svelte';
     import type {SelectedModel} from "../../../types/ambient";
     import type {TrainedModel} from "../../../types/models";
-    import {Middleware} from "$lib/config/middleware";
+    import {MiddlewareUrls} from "$lib/config/middlewareUrls";
 
 
     let {selectedModel=$bindable(),trainedModels}: {selectedModel: SelectedModel, trainedModels: TrainedModel[]} = $props();
@@ -88,7 +88,7 @@
     async function fetchAlgorithmName(model: TrainedModel): Promise<void> {
         try {
             const response = await fetch(
-                `${get(BACKEND_URL)}${Middleware.algorithms}${model.model.algorithm}`
+                `${get(BACKEND_URL)}${MiddlewareUrls.algorithms}${model.model.algorithm}`
             );
 
             const data = await response.json();

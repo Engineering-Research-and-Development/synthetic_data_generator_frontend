@@ -1,59 +1,57 @@
 <script lang="ts">
+	import { onMount } from "svelte";
+	import { goto } from "$app/navigation";
 	import { Button } from 'flowbite-svelte';
+	import {Section} from "flowbite-svelte-blocks";
+	// UI Components
 	import BackButton from "../components/layout/BackButton.svelte";
 	import CancelButton from "../components/layout/CancelButton.svelte";
-	import {onMount} from "svelte";
-	import {goto} from "$app/navigation";
-	import {Section} from "flowbite-svelte-blocks";
 	import PageHeading from "../components/layout/PageHeading.svelte";
-	import type {FeaturesCreated, SavedFunctionData, SelectedModel} from "../../types/ambient";
-	import type {RowData} from "../../types/table";
 	import ScratchDataset from "./components/ScratchDataset.svelte";
 	import UserDataset from "./components/UserDataset.svelte";
 	import AdditionalRows from "./components/AdditionalRows.svelte";
 	import FeatureFunctionsTable from "./components/FeatureFunctionsTable.svelte";
 	import ModelSummary from "./components/ModelSummary.svelte";
-	import {getEndpointUrl} from "$lib/config/utils";
-	import type {FeatureConfig} from "../../types/middlewarePost";
 	import FeatureType from "./components/FeatureType.svelte";
 
-	let functionData: SavedFunctionData ={};
-	let userFile: RowData[] = [];
-	let additionalRows: number = 0;
-	let newModel: boolean = false;
-	let selectedModel: SelectedModel | null = null;
-	let featuresCreated: FeaturesCreated[] = [];
-	let headers: string[] = [];
-	let tableData: RowData[] = [];
-	let maxRowsToShow = 4;
-	let featureTypes: FeatureConfig = {} as FeatureConfig;
-	let newModelName: string;
+	// Types & Utils
+	import type { FeaturesCreated, SelectedModel } from "../../types/ambient";
+	import type { RowData } from "../../types/table";
+    import type {FeatureConfig, FeatureFunctionParameters} from "../../types/middlewarePost";
+	import { getEndpointUrl } from "$lib/config/utils";
+	import { StorageService } from "$lib/services/StorageService";
 
-	async function loadUserFile(): Promise<void> {
-		try {
-			const userFileData = sessionStorage.getItem("userFile");
-			userFile = userFileData ? JSON.parse(userFileData) : [];
-			headers = Object.keys(userFile[0]);
-			tableData = userFile
-		} catch (error) {
-			userFile = [];
+
+	let state = {
+		functionData: {} as FeatureFunctionParameters[],
+		userFile: [] as RowData[],
+		additionalRows: 0,
+		newModel: false,
+		selectedModel: null as SelectedModel | null,
+		featuresCreated: [] as FeaturesCreated[],
+		featureTypes: {} as FeatureConfig,
+		newModelName: "",
+		headers: [] as string[]
+	};
+
+	const MAX_ROWS_DISPLAY = 4;
+
+	onMount(() => {
+		state.featuresCreated = StorageService.getJson("featuresCreated", []);
+		state.userFile = StorageService.getJson("userFile", []);
+		state.additionalRows = Number(sessionStorage.getItem("additionalRows") || 0);
+		state.functionData = StorageService.getJson("functionData", []);
+		state.newModel = StorageService.getJson("newModel", false);
+		state.selectedModel = StorageService.getJson("selectedModel", null);
+		state.newModelName = StorageService.getJson("newModelName", "");
+		state.featureTypes = StorageService.getJson("featureTypes", {} as FeatureConfig);
+		if (state.userFile.length > 0) {
+			state.headers = Object.keys(state.userFile[0]);
 		}
-	}
-
-	onMount(async () => {
-		await loadUserFile();
-		additionalRows = Number(sessionStorage.getItem("additionalRows")) || 0;
-		functionData = JSON.parse(sessionStorage.getItem("functionData") || "{}");
-		newModel = JSON.parse(sessionStorage.getItem("newModel") || "false");
-		selectedModel = JSON.parse(sessionStorage.getItem("selectedModel") || "");
-		featuresCreated = JSON.parse(sessionStorage.getItem("featuresCreated") || "[]");
-		newModelName = JSON.parse(sessionStorage.getItem("newModelName") || "");
-		featureTypes = JSON.parse(sessionStorage.getItem("featureTypes") || "[]");
 	});
 
-
-	function sendData() {
-		goto(getEndpointUrl("sendPage"))
+	function handleNavigation() {
+		goto(getEndpointUrl("sendPage"));
 	}
 </script>
 
@@ -61,25 +59,33 @@
 	<div class="flex flex-col gap-6">
 		<PageHeading text="Review and send the data" />
 
-		{#if featuresCreated.length > 0}
-			<ScratchDataset featuresCreated={featuresCreated} />
+		{#if state.featuresCreated.length > 0}
+			<ScratchDataset featuresCreated={state.featuresCreated} />
 		{:else}
-			<UserDataset maxRowsToShow={maxRowsToShow}
-						 headers={headers}
-						 tableData={tableData}/>
+			<div class="space-y-6">
+				<UserDataset
+						maxRowsToShow={MAX_ROWS_DISPLAY}
+						headers={state.headers}
+						tableData={state.userFile}
+				/>
+				<FeatureType featureTypes={state.featureTypes} />
+				<ModelSummary
+						selectedModel={state.selectedModel}
+						newModel={state.newModel}
+						newModelName={state.newModelName}
+				/>
+			</div>
 		{/if}
-		<FeatureType featureTypes={featureTypes}/>
-		<AdditionalRows additionalRows={additionalRows} />
-		<FeatureFunctionsTable functionData={functionData} />
-		<ModelSummary	selectedModel={selectedModel}
-						newModel={newModel}
-						newModelName={newModelName}/>
 
-		<!-- Actions -->
-		<div class="flex justify-end gap-4">
+		<AdditionalRows additionalRows={state.additionalRows} />
+		<FeatureFunctionsTable functionData={state.functionData} />
+
+		<footer class="flex justify-end gap-4 mt-4">
 			<BackButton />
 			<CancelButton />
-			<Button color="blue" on:click={sendData}>Send</Button>
-		</div>
+			<Button color="blue" on:click={() => handleNavigation()}>
+				Send Data
+			</Button>
+		</footer>
 	</div>
 </Section>

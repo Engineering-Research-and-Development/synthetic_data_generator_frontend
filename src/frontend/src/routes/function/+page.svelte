@@ -9,32 +9,35 @@
     import FunctionsTable from "./components/FunctionsTable.svelte";
     import NewRows from "./components/NewRows.svelte";
     import {getEndpointUrl} from "$lib/config/utils";
+    import {navState} from "$lib/config/navigation.svelte";
 
-    let featuresName: string[] = [];
-    let featureFunction: FeatureFunction = {};
-    let additionalRows: number = 0;
-    let errorMessage: string;
+    let featureFunction = $state<FeatureFunction[]>([]);
+    let features = $state<string[]>([]);
+    let additionalRows: number = $state(0);
+    let errorMessage = $state<string | null>(null);
 
     onMount(() => {
-        const features = sessionStorage.getItem("selectedColumns");
-        if (features) {
-            featuresName = JSON.parse(features);
-            featuresName.forEach((feature) => {
-                if (!featureFunction[feature]) {
-                    featureFunction[feature] = [];
-                }
-            });
+        const storedFeatures = sessionStorage.getItem("selectedColumns");
+        if (storedFeatures) {
+            const featuresName: string[] = JSON.parse(storedFeatures);
+            features = featuresName;
+
+            featureFunction = featuresName.map(name => ({
+                featureName: name,
+                functionId: []
+            }));
         }
     });
 
-    function submitFunctions(): void {
+    function submitFunctions(event: SubmitEvent): void {
+        event.preventDefault();
         if (additionalRows <= 0) {
             errorMessage="Additional rows cannot be zero or lower";
             return;
         }
         sessionStorage.setItem('featureFunction', JSON.stringify(featureFunction));
         sessionStorage.setItem('additionalRows', additionalRows.toString());
-        goto(getEndpointUrl("parametersPage"));
+        goto(navState.getNextLink(getEndpointUrl("functionPage"))!);
     }
 </script>
 
@@ -45,13 +48,12 @@
     {/if}
 
     <form
-            on:submit|preventDefault={submitFunctions}
+            onsubmit={submitFunctions}
             class="p-6 bg-white rounded-lg shadow-md"
     >
-        {#if featuresName.length>0}
+        {#if features.length>0}
             <FunctionsTable
-                    featuresName={featuresName}
-                    featureFunction={featureFunction}
+                    bind:featureFunction={featureFunction}
             />
         {/if}
 
