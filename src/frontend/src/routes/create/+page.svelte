@@ -28,7 +28,7 @@
 	});
 
 	function addFeature() {
-		features = [...features, { id: features.length + 1, feature: '', type: '', category: '' }];
+		features = [...features, { id: features.length + 1, name: '', type: '', category: '' }];
 	}
 
 	function removeFeature(index: number) {
@@ -37,7 +37,7 @@
 
 	function submit(event: Event) {
 		event.preventDefault();
-		const featureNames = features.map(f => f.feature);
+		const featureNames = features.map(f => f.name);
 
 		sessionStorage.setItem("selectedColumns", JSON.stringify(featureNames));
 		sessionStorage.setItem("featuresCreated", JSON.stringify(features));
@@ -84,7 +84,7 @@
 									<TableBodyCell>
 										<Input
 												placeholder="Lorem ipsum dolor sit amet"
-												bind:value={feature.feature}
+												bind:value={feature.name}
 												required
 												size="sm"
 										/>

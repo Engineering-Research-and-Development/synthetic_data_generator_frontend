@@ -1,7 +1,8 @@
 export let types = [
-    {value: 'string', name: 'String'},
-    {value: 'integer', name: 'Integer'},
-    {value: 'double', name: 'Double'},
+    {value: 'str', name: 'String'},
+    {value: 'int32', name: 'Integer'},
+    {value: 'float32', name: 'Float'},
+    {value: 'bool', name: 'Boolean'},
 ];
 
 export let featureTypes = [

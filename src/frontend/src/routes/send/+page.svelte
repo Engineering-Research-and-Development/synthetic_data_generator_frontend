@@ -14,6 +14,7 @@
     import {MiddlewareUrls} from "$lib/config/middlewareUrls";
     import {get} from "svelte/store";
     import { StorageService } from "$lib/services/StorageService";
+    import {navState} from "$lib/config/navigation.svelte";
 
     let userFile: Array<{number: Array<{string: number}>}> = [];
     let additionalRows: number = 0;
@@ -57,7 +58,7 @@
         status = "sending";
         let userData = null;
 
-        if (userFile.length > 0) {
+        if (navState.mode === "enhanced") {
             userData = {
                 input_type: "user_file",
                 user_file: userFile,

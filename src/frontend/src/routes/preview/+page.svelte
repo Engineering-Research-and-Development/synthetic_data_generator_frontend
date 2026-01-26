@@ -20,6 +20,7 @@
     import type {FeatureConfig, FeatureFunctionParameters} from "../../types/middlewarePost";
 	import { getEndpointUrl } from "$lib/config/utils";
 	import { StorageService } from "$lib/services/StorageService";
+	import {navState} from "$lib/config/navigation.svelte";
 
 
 	let state = {
@@ -59,7 +60,7 @@
 	<div class="flex flex-col gap-6">
 		<PageHeading text="Review and send the data" />
 
-		{#if state.featuresCreated.length > 0}
+		{#if (navState.mode === "create")}
 			<ScratchDataset featuresCreated={state.featuresCreated} />
 		{:else}
 			<div class="space-y-6">

@@ -104,7 +104,7 @@
 
 
 {#if errorMessage}
-    <Error message={errorMessage}/>
+    <Error errorMessage={errorMessage}/>
 {/if}
 
 <div class="w-full">

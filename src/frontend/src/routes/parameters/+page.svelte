@@ -30,16 +30,8 @@
     async function loadFunctionData(): Promise<void> {
         try {
             const selectedFunctions = readSelectedFunctions();
-
-            if (!Array.isArray(selectedFunctions)) {
-                console.error("Data in sessionStorage is not an array");
-                return;
-            }
-
             const functionIds = collectUniqueFunctionIds(selectedFunctions);
             const remoteFunctionStructure = await fetchFunctions(functionIds);
-
-
             functionData = mergeFeaturesFunctions(selectedFunctions, remoteFunctionStructure);
         } catch (error) {
             errorMessage = String(error);

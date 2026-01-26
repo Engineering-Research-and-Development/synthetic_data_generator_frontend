@@ -15,6 +15,7 @@ export type Parameter = {
 export type FunctionParameter = {
     function: AIFunction;
     parameters: Parameter[];
+    allowedTypes: string[];
 };
 
 export type FeatureFunction = {
@@ -24,7 +25,7 @@ export type FeatureFunction = {
 
 export type FeaturesCreated = {
     id: number,
-    feature: string,
+    name: string,
     type: string,
     category: string
 };

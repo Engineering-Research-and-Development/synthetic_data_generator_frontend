@@ -1,5 +1,10 @@
 import type {FeaturesCreated, FunctionParameter} from "./ambient";
 
+export type FeatureFunctionParameters = {
+    feature_name: string;
+    associated_functions: FunctionParameter[]
+};
+
 export type AIModel = {
     selected_model_id: number;
     new_model: boolean;
@@ -10,7 +15,7 @@ export type UserFile = {
     input_type: string
     user_file: { number: { string: number }[] }[];
     ai_model: AIModel;
-    functions?: OutFunction[];
+    functions?: FeatureFunctionParameters[];
 }
 export type FeatureConfig = Record<
     string,
@@ -20,7 +25,7 @@ export type FeatureConfig = Record<
 export type Features = {
     input_type: string;
     features_created: FeaturesCreated[];
-    functions: OutFunction[];
+    functions: FeatureFunctionParameters[];
 }
 export type UserData = UserFile | Features;
 
@@ -29,7 +34,3 @@ export type SdgOut = {
     data: UserData;
     feature_types?: FeatureConfig;
 }
-export type FeatureFunctionParameters = {
-    feature_name: string;
-    associated_functions: FunctionParameter[]
-};
