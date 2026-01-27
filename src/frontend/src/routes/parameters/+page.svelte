@@ -20,6 +20,7 @@
     import type {FeatureFunctionParameters} from "../../types/middlewarePost";
     import {navState} from "$lib/config/navigation.svelte";
     import {MiddlewareUrls} from "$lib/config/middlewareUrls";
+    import {convertParamsToString} from "./controllers/parameters";
 
     let { functionData = $bindable([]) } = $props<{ functionData: FeatureFunctionParameters[] }>();
     let errorMessage = $state<string | null>(null);
@@ -83,6 +84,7 @@
 
     function save(event: SubmitEvent): void {
         event.preventDefault();
+        functionData = convertParamsToString(functionData)
         sessionStorage.setItem('functionData', JSON.stringify(functionData));
         goto(navState.getNextLink(getEndpointUrl("parametersPage"))!);
     }
