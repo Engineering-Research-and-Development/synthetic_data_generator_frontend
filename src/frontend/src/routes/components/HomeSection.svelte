@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { Modal, Fileupload, Button, Spinner } from "flowbite-svelte";
+    import { Modal, Fileupload, Button } from "flowbite-svelte";
     import { goto } from "$app/navigation";
     import { csvParse } from "d3";
     import {getEndpointUrl} from "$lib/config/utils";
     import Error from "./Error.svelte";
+    import FullPageSpinner from "./FullPageSpinner.svelte";
 
     let uploadPopup: boolean = $state(false);
     let uploadedFile: File | null=$state(null);
@@ -101,12 +102,7 @@
         Enhance Existing dataset
     </Button>
     {#if showSpinner}
-        <div class="fixed top-0 left-0 w-full h-full bg-black/90 flex items-center justify-center z-50 transition-opacity duration-300">
-            <div class="flex flex-col items-center">
-                <Spinner type="bars" color="blue" size="xl" />
-                <span class="text-white mt-4 text-lg font-medium">Uploading...</span>
-            </div>
-        </div>
+        <FullPageSpinner text="Uploading..." />
     {/if}
 
     <Modal title="Upload a dataset" bind:open={uploadPopup} size="md" autoclose >

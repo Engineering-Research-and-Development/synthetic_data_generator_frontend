@@ -1,5 +1,5 @@
 export type Datatype = {
-    datatype: string
+    type: string
     is_categorical: boolean
 }
 export type NewAlgorithm = {

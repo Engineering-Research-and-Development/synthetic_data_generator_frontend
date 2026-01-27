@@ -29,6 +29,7 @@
 
     $effect(() => {
         selectedModel = ctrl.selectedModelData;
+        console.log(ctrl.chosenAlgo)
     });
 
     $effect(() => {
@@ -90,7 +91,9 @@
                                 <div class="flex flex-col gap-1">
                                     {#each ctrl.chosenAlgo.datatypes as data}
                                         <div class="text-sm">
-                                            <span class="capitalize">{data.datatype}</span>
+                                            <span class="capitalize">
+                                                {data.type}
+                                            </span>
                                             <span class="text-gray-400 text-xs italic">
                                                 ({data.is_categorical ? 'categorical' : 'non-categorical'})
                                             </span>

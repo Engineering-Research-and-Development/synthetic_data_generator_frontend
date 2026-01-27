@@ -163,7 +163,7 @@
                 {/each}
             {:else}
                 <div class="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-xl">
-                    <p class="text-gray-400">No functions selected or loading...</p>
+                    <p class="text-gray-400">No functions selected</p>
                 </div>
             {/if}
         </div>
