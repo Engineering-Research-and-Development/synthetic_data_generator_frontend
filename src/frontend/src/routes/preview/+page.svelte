@@ -27,12 +27,10 @@
 		functionData: {} as FeatureFunctionParameters[],
 		userFile: [] as RowData[],
 		additionalRows: 0,
-		newModel: false,
 		selectedModel: null as SelectedModel | null,
 		featuresCreated: [] as FeaturesCreated[],
 		featureTypes: {} as FeatureConfig,
-		newModelName: "",
-		headers: [] as string[]
+		headers: [] as string[],
 	};
 
 	const MAX_ROWS_DISPLAY = 4;
@@ -42,9 +40,7 @@
 		state.userFile = StorageService.getJson("userFile", []);
 		state.additionalRows = Number(sessionStorage.getItem("additionalRows") || 0);
 		state.functionData = StorageService.getJson("functionData", []);
-		state.newModel = StorageService.getJson("newModel", false);
 		state.selectedModel = StorageService.getJson("selectedModel", null);
-		state.newModelName = StorageService.getJson("newModelName", "");
 		state.featureTypes = StorageService.getJson("featureTypes", {} as FeatureConfig);
 		if (state.userFile.length > 0) {
 			state.headers = Object.keys(state.userFile[0]);
@@ -70,11 +66,11 @@
 						tableData={state.userFile}
 				/>
 				<FeatureType featureTypes={state.featureTypes} />
-				<ModelSummary
-						selectedModel={state.selectedModel}
-						newModel={state.newModel}
-						newModelName={state.newModelName}
-				/>
+				{#if (state.selectedModel != null)}
+					<ModelSummary
+							selectedModel={state.selectedModel}
+					/>
+				{/if}
 			</div>
 		{/if}
 

@@ -31,7 +31,8 @@ export type FeaturesCreated = {
 };
 
 export type SelectedModel = {
+    new: boolean;
     id: number;
     name: string;
-    version?: string;
+    version: string;
 };

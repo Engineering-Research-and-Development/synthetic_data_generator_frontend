@@ -1,136 +1,54 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount} from 'svelte';
     import { goto } from '$app/navigation';
-    import { get } from 'svelte/store';
     import { Section } from 'flowbite-svelte-blocks';
-    import PageHeading from '../components/layout/PageHeading.svelte';
-    import Footer from '../components/layout/Footer.svelte';
-    import Error from '../components/Error.svelte';
-    import ModelNew from './components/ModelNew.svelte';
-    import ModelPreTrained from './components/ModelPreTrained.svelte';
-    import { BACKEND_URL } from '../../stores/shared';
+    import {Card, Heading} from 'flowbite-svelte';
     import type { SelectedModel } from '../../types/ambient';
-    import type { Model, TrainedModel, Version } from '../../types/models';
     import type { NewAlgorithm } from '../../types/algorithms';
-    import {MiddlewareUrls} from "$lib/config/middlewareUrls";
-    import {getEndpointUrl} from "$lib/config/utils";
+    import type { TrainedModel } from '../../types/models';
+    import ModelPreTrained from "./components/ModelPreTrained.svelte";
+    import ModelNew from "./components/ModelNew.svelte";
+    import PageHeading from "../components/layout/PageHeading.svelte";
+    import Error from "../components/Error.svelte";
+    import {ModelService} from "$lib/services/ModelService";
     import {navState} from "$lib/config/navigation.svelte";
+    import {getEndpointUrl} from "$lib/config/utils";
+    import Footer from "../components/layout/Footer.svelte";
 
 
-    let useNewModel = true;
-    let selectedModel: SelectedModel ;
-    let newModelName = '';
+    const modelService = new ModelService();
+    let useNewModel = $state(true);
+    let isLoading = $state(true);
+    let errorMessage = $state<string | null>(null);
 
-    let algorithms: NewAlgorithm[] = [];
-    let trainedModels: TrainedModel[] = [];
+    let selectedNew = $state<SelectedModel | null>(null);
+    let selectedPreTrained = $state<SelectedModel | null>(null);
+    let newModelName = $state('');
 
-    let isLoading = true;
-    let errorMessage: string | null = null;
+    let algorithms = $state<NewAlgorithm[]>([]);
+    let trainedModels = $state<TrainedModel[]>([]);
 
-    const backendUrl = get(BACKEND_URL);
+    const selectedModel = $derived(useNewModel ? selectedNew : selectedPreTrained);
 
-    onMount(loadData);
-
-    /* ──────────────────────────────
-       Data loading
-    ────────────────────────────── */
-
-    async function loadData(): Promise<void> {
+    onMount(async () => {
         try {
-            algorithms = await loadAlgorithms();
-            trainedModels = await loadTrainedModels();
-        } catch (error: any) {
-            errorMessage = error.message;
+            [algorithms, trainedModels] = await Promise.all([
+                modelService.fetchAlgorithms(),
+                modelService.fetchTrainedModels()
+            ]);
+        } catch (e: any) {
+            errorMessage = e.message;
         } finally {
             isLoading = false;
         }
-    }
+    });
 
-    async function loadAlgorithms(): Promise<NewAlgorithm[]> {
-        const response = await fetch(`${backendUrl}${MiddlewareUrls.algorithms}`);
-        if (!response.ok) {
-            errorMessage= "Failed to fetch algorithms!";
+    function submit(event: SubmitEvent) {
+        event.preventDefault();
+        if (!useNewModel && selectedModel != null) {
+            selectedModel.new=false;
         }
-
-        const { algorithms } = await response.json();
-        const ids = algorithms.map((a: { id: number }) => a.id);
-
-        const results = await Promise.all(ids.map(fetchAlgorithm));
-
-        return results.map(normalizeAlgorithmName);
-    }
-
-    async function fetchAlgorithm(id: number): Promise<NewAlgorithm> {
-        const response = await fetch(`${backendUrl}${MiddlewareUrls.algorithms}${id}`);
-        if (!response.ok) {
-            errorMessage = "Failed to fetch the selected algorithm"
-        }
-
-        const { algorithm, datatypes } = await response.json();
-
-        return {
-            ...algorithm,
-            datatypes: datatypes.map((dt: any) => ({
-                type: dt.type,
-                is_categorical: dt.is_categorical
-            }))
-        };
-    }
-
-    function normalizeAlgorithmName(algorithm: NewAlgorithm): NewAlgorithm {
-        const lastDot = algorithm.name.lastIndexOf('.');
-        return {
-            ...algorithm,
-            name: lastDot >= 0
-                ? algorithm.name.slice(lastDot + 1)
-                : algorithm.name
-        };
-    }
-
-    async function loadTrainedModels(): Promise<TrainedModel[]> {
-        const response = await fetch(`${backendUrl}${MiddlewareUrls.trained_models}`);
-        if (!response.ok) {
-            errorMessage= "Failed to fetch trained_models"
-        }
-
-        const { models } = await response.json();
-
-        const ids = models.map(
-            (m: { model: Model; version: Version }) => m.model.id
-        );
-
-        return Promise.all(ids.map(fetchTrainedModel));
-    }
-
-    async function fetchTrainedModel(id: number): Promise<TrainedModel> {
-        const response = await fetch(`${backendUrl}${MiddlewareUrls.trained_models}${id}`);
-        if (!response.ok) {
-            errorMessage = "Failed to fetch the selected trained model"
-        }
-
-        const data = await response.json();
-
-        return {
-            model: data.model,
-            datatypes: data.datatypes,
-            versions: data.versions
-        };
-    }
-
-    /* ──────────────────────────────
-       Submit
-    ────────────────────────────── */
-
-    function submit(): void {
-        if (!selectedModel) {
-            errorMessage = 'Please select a model';
-            return;
-        }
-
-        sessionStorage.setItem('newModel', JSON.stringify(useNewModel));
         sessionStorage.setItem('selectedModel', JSON.stringify(selectedModel));
-        sessionStorage.setItem('newModelName', JSON.stringify(newModelName));
-
         goto(navState.getNextLink(getEndpointUrl("modelPage"))!);
     }
 </script>
@@ -138,67 +56,47 @@
 <Section>
     <PageHeading text="AI Model Selection" />
     {#if errorMessage}
-        <Error bind:errorMessage/>
+        <Error bind:errorMessage />
     {/if}
 
-    <form
-            on:submit|preventDefault={submit}
-            class="p-6 bg-white rounded-lg shadow-md"
-    >
-        <div class="flex w-full md:flex-row gap-6 mb-6">
+    <form onsubmit={submit} class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
 
-            <!-- New model -->
-            <div
-                    class={`w-1/2 p-4 border rounded-lg cursor-pointer transition
-                ${useNewModel ? 'border-blue-500' : 'border-gray-300 opacity-50'}`}
-                    role="button"
-                    tabindex="0"
-                    on:click={() => (useNewModel = true)}
-                    on:keydown={(e) =>
-                    (e.key === 'Enter' || e.key === ' ') && (useNewModel = true)
-                }
+            <Card
+                padding="md"
+                class="min-w-[500px] cursor-pointer border-2 transition-all {useNewModel ? 'border-blue-600 ring-1 ring-blue-600' : 'border-gray-200 opacity-50 grayscale'}"
+                onclick={() => (useNewModel = true)}
+                >
+                <Heading tag="h3" class="mb-4 text-center text-lg font-bold text-gray-900">New Blueprint</Heading>
+                <div class={!useNewModel ? 'pointer-events-none' : ''}>
+                    {#if !isLoading}
+                        {#key useNewModel}
+                        <ModelNew
+                                availableAlgorithms={algorithms}
+                                bind:selectedModel={selectedNew}
+                                bind:newModelName
+                        />
+                        {/key}
+                    {/if}
+                </div>
+            </Card>
+
+            <Card
+                    padding="md"
+                    class="min-w-[500px] cursor-pointer border-2 transition-all {!useNewModel ? 'border-blue-600 ring-1 ring-blue-600' : 'border-gray-200 opacity-50 grayscale'}"
+                    onclick={() => (useNewModel = false)}
             >
-                <h2 class="text-xl font-semibold mb-4 text-center">
-                    New model from blueprint
-                </h2>
-
-                {#if isLoading}
-                    <p>Loading...</p>
-                {:else}
-                    <ModelNew
-                            availableAlgorithms={algorithms}
-                            bind:selectedModel
-                            bind:newModelName
-                    />
-                {/if}
-            </div>
-
-            <!-- Pre-trained model -->
-            <div
-                    class={`w-1/2 p-4 border rounded-lg cursor-pointer transition
-                ${useNewModel ? 'border-gray-300 opacity-50' : 'border-blue-500'}`}
-                    role="button"
-                    tabindex="0"
-                    on:click={() => (useNewModel = false)}
-                    on:keydown={(e) =>
-                    (e.key === 'Enter' || e.key === ' ') && (useNewModel = false)
-                }
-            >
-                <h2 class="text-xl font-semibold mb-4 text-center">
-                    Use a pre-trained model
-                </h2>
-
-                {#if isLoading}
-                    <p>Loading...</p>
-                {:else}
-                    <ModelPreTrained
-                            bind:selectedModel
-                            trainedModels={trainedModels}
-                    />
-                {/if}
-            </div>
+                <Heading tag="h3" class="mb-4 text-center text-lg font-bold text-gray-900">Pre-trained</Heading>
+                <div class={useNewModel ? 'pointer-events-none' : ''}>
+                    {#if !isLoading}
+                        <ModelPreTrained
+                                bind:selectedModel={selectedPreTrained}
+                                {trainedModels}
+                        />
+                    {/if}
+                </div>
+            </Card>
         </div>
-
         <Footer />
     </form>
 </Section>

@@ -20,11 +20,9 @@
     let additionalRows: number = 0;
     let functionData:FeatureFunctionParameters[];
     let featureTypes: FeatureConfig;
-    let newModel: boolean = false;
     let selectedModel: SelectedModel;
     let featuresCreated: FeaturesCreated[] = [];
     let doc_id: string = $state("");
-    let newModelName: string;
     let backendUrl = get(BACKEND_URL);
     type Status = "idle" | "sending" | "success" | "error";
 
@@ -32,23 +30,25 @@
     let errorMessage = $state("");
 
 
-    function generateAiModel(newModel: boolean, newModelName: string, selectedModelId: number,  selectedVersion?: string): AIModel{
-        return {
-            selected_model_id: selectedModelId,
-            model_version: selectedVersion,
-            new_model: newModel,
-            ...(newModelName && { new_model_name: newModelName }),
-        };
+    function generateAiModel(selectedModel: SelectedModel): AIModel{
+            let data: AIModel= {
+                new_model: selectedModel.new,
+                selected_model_id: selectedModel.id
+            }
+            if (selectedModel.new) {
+                data.new_model_name = selectedModel.name
+            } else {
+                data.model_version = selectedModel.version
+            }
+             return data
     }
 
     onMount(async () => {
         additionalRows = Number(sessionStorage.getItem("additionalRows")) || 0;
         functionData = StorageService.getJson("functionData", []);
-        newModel = StorageService.getJson("newModel", false);
         selectedModel = StorageService.getJson("selectedModel", {} as SelectedModel);
         userFile = StorageService.getJson("userFile", []);
         featuresCreated = StorageService.getJson("featuresCreated", []);
-        newModelName = StorageService.getJson("newModelName", "");
         featureTypes = StorageService.getJson("featureTypes", {} as FeatureConfig);
 
         await sendData();
@@ -62,7 +62,7 @@
             userData = {
                 input_type: "user_file",
                 user_file: userFile,
-                ai_model: generateAiModel(newModel, newModelName, selectedModel.id, selectedModel.version),
+                ai_model: generateAiModel(selectedModel),
                 ...(functionData.length > 0 && { functions: functionData })
             };
         } else {

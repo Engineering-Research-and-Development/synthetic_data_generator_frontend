@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import PreviewSection from "./PreviewSection.svelte";
 
     let {additionalRows} = $props()
