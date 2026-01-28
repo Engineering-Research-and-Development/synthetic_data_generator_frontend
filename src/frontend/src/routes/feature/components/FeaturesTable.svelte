@@ -8,7 +8,7 @@
         TableHeadCell,
         Checkbox
     } from 'flowbite-svelte';
-    import type {RowData} from "../../../types/table";
+    import type {RowData} from "../../../types/userFileTable";
 
     let max_rows = 10; // Maximum number of rows to display
     const max_elements_to_show = 2; // Maximum number of elements to display in each cell

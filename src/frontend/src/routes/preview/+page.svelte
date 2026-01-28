@@ -16,7 +16,7 @@
 
 	// Types & Utils
 	import type { FeaturesCreated, SelectedModel } from "../../types/ambient";
-	import type { RowData } from "../../types/table";
+	import type { RowData } from "../../types/userFileTable";
     import type {FeatureConfig, FeatureFunctionParameters} from "../../types/middlewarePost";
 	import { getEndpointUrl } from "$lib/config/utils";
 	import { StorageService } from "$lib/services/StorageService";

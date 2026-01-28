@@ -58,7 +58,7 @@
             </TableBody>
         </Table>
     {:else}
-        <p class="text-center text-gray-600 dark:text-gray-300">
+        <p class="text-center text-gray-600 ">
             No functions selected.
         </p>
     {/if}

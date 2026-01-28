@@ -1,8 +1,11 @@
+import type {Datatype} from "./algorithms";
+
 export type AIFunction = {
     id: number;
     name: string;
     description: string;
     function_reference: string;
+    is_generative: boolean
 };
 
 export type Parameter = {
@@ -15,7 +18,7 @@ export type Parameter = {
 export type FunctionParameter = {
     function: AIFunction;
     parameters: Parameter[];
-    allowedTypes: string[];
+    datatypes: Datatype[];
 };
 
 export type FeatureFunction = {

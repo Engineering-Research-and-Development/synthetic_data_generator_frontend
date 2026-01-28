@@ -7,7 +7,7 @@
 	import {Section} from "flowbite-svelte-blocks";
 	import PageHeading from "../components/layout/PageHeading.svelte";
 	import {Button} from "flowbite-svelte";
-	import type {RowData} from "../../types/table";
+	import type {RowData} from "../../types/userFileTable";
 	import {getEndpointUrl} from "$lib/config/utils";
 	import {navState} from "$lib/config/navigation.svelte";
 

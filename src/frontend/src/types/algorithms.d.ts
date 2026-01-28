@@ -1,7 +1,9 @@
 export type Datatype = {
+    id: number
     type: string
     is_categorical: boolean
 }
+
 export type NewAlgorithm = {
     id: number;
     name: string;
