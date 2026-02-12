@@ -23,7 +23,8 @@
             selectedModel = {
                 id: ctrl.activeModel.model.id,
                 name: ctrl.activeModel.model.name,
-                version: ctrl.selectedVersionName
+                version: ctrl.selectedVersionName,
+                new: false
             };
         }
         if (ctrl.activeModel && !ctrl.selectedVersionName) {

@@ -29,7 +29,6 @@
 
     $effect(() => {
         selectedModel = ctrl.selectedModelData;
-        console.log(ctrl.chosenAlgo)
     });
 
     $effect(() => {

@@ -36,7 +36,7 @@
                 selected_model_id: selectedModel.id
             }
             if (selectedModel.new) {
-                data.new_model_name = selectedModel.name
+                data.new_model_name = selectedModel.version
             } else {
                 data.model_version = selectedModel.version
             }
