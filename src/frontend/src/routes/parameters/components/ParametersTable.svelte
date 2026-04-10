@@ -10,6 +10,7 @@
         TableHeadCell,
         Toggle
     } from "flowbite-svelte";
+    import snarkdown from 'snarkdown';
     let {item} = $props()
 </script>
 
@@ -23,12 +24,20 @@
     <TableBody tableBodyClass="divide-y">
         {#each item.associated_functions as fn, j (fn.function.id || j)}
             <TableBodyRow class={fn.function.is_generative? "bg-green-100":""}>
-                <TableBodyCell class="align-top w-1/3">
-                    <div class="font-semibold text-gray-900 dark:text-white">{fn.function.name}</div>
-                    <div class="text-sm text-gray-500 mt-1 italic">{fn.function.description}</div>
+                <TableBodyCell class="align-top min-w-[250px] max-w-md">
+                    <div class="font-semibold text-gray-900 dark:text-white break-words">
+                        {fn.function.name}
+                    </div>
+
+                    <div class="text-sm text-gray-500 mt-1 italic whitespace-normal break-words leading-relaxed">
+                        {@html snarkdown(fn.function.description)}
+                    </div>
+
                     {#if fn.function.is_generative}
-                        <div>
-                            <code class="font-mono">Generative Function</code>
+                        <div class="mt-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-green-200 text-green-900">
+                    Generative Function
+                </span>
                         </div>
                     {/if}
                 </TableBodyCell>

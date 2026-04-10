@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -11,11 +11,11 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.3.1",
-    "@sveltejs/kit": "2.49.5",
+    "@sveltejs/kit": "2.53.3",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@types/d3": "^7.4.3",
     "autoprefixer": "^10.4.23",
-    "svelte": "5.46.4",
+    "svelte": "5.53.5",
     "svelte-check": "^4.3.5",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
@@ -32,6 +32,7 @@
     "flowbite-svelte": "^0.47.4",
     "flowbite-svelte-blocks": "^1.1.4",
     "flowbite-svelte-icons": "^2.3.0",
+    "snarkdown": "^2.0.0",
     "svelte-heros-v2": "^3.0.1",
     "svelte-local-storage-store": "^0.6.4",
     "svelte-routing": "^2.13.0"
